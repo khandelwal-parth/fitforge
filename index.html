@@ -1,13 +1,11 @@
 <!doctype html>
 <html lang="en" class="h-full">
- <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FitForge Pro - Ultimate Fitness Coach</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -20,9 +18,6 @@
             'neon': '#00ff88',
             'neon-dim': '#00cc6a',
             'cyan': '#00d4ff',
-            'light-bg': '#ffffff',
-            'light-card': '#f5f5f5',
-            'light-text': '#1a1a1a'
           }
         }
       }
@@ -31,1169 +26,1301 @@
   <style>
     * { box-sizing: border-box; }
     html, body { height: 100%; width: 100%; }
-    .neon-glow { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(0, 255, 136, 0.1); }
-    .neon-glow:hover { box-shadow: 0 0 30px rgba(0, 255, 136, 0.5), 0 0 60px rgba(0, 255, 136, 0.2); }
-    .card-glow { transition: all 0.3s; }
-    .card-glow:hover { box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
-    .option-selected { border-color: #00ff88 !important; background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 212, 255, 0.05) 100%); }
+    .neon-glow { box-shadow: 0 0 20px rgba(0,255,136,0.3), 0 0 40px rgba(0,255,136,0.1); }
+    .neon-glow:hover { box-shadow: 0 0 30px rgba(0,255,136,0.5), 0 0 60px rgba(0,255,136,0.2); }
+    .card-glow:hover { box-shadow: 0 0 20px rgba(0,255,136,0.2); }
+    .option-selected { border-color: #00ff88 !important; background: linear-gradient(135deg, rgba(0,255,136,0.1) 0%, rgba(0,212,255,0.05) 100%); }
     .progress-fill { background: linear-gradient(90deg, #00ff88 0%, #00d4ff 100%); }
-    @keyframes pulse-neon { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-    @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
-    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes bounce-card { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-    @keyframes checkmark { 0% { transform: scale(0.8) rotate(-45deg); opacity: 0; } 50% { transform: scale(1.2); } 100% { transform: scale(1) rotate(0); opacity: 1; } }
-    @keyframes confetti { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(500px) rotate(720deg); opacity: 0; } }
+    @keyframes pulse-neon { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    @keyframes slideInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes bounce-card { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
     .animate-pulse-neon { animation: pulse-neon 2s ease-in-out infinite; }
-    .animate-shimmer { background: linear-gradient(90deg, transparent, rgba(0,255,136,0.3), transparent); background-size: 1000px 100%; animation: shimmer 2s infinite; }
-    .slide-in-left { animation: slideInLeft 0.5s ease-out; }
-    .slide-in-right { animation: slideInRight 0.5s ease-out; }
     .slide-in-up { animation: slideInUp 0.4s ease-out; }
     .bounce-select { animation: bounce-card 0.3s ease-out; }
-    .checkmark-anim { animation: checkmark 0.5s ease-out; }
     .page-transition { animation: slideInUp 0.4s ease-out; }
-    .confetti-piece { animation: confetti 2s ease-out forwards; position: fixed; pointer-events: none; }
-    .tab-active { @apply bg-neon text-dark; }
-    .tab-inactive { @apply bg-dark-card border border-dark-border hover:border-neon/50; }
-    .light-mode { --bg: #ffffff; --card: #f5f5f5; --text: #1a1a1a; --border: #e5e5e5; }
-    .light-mode .bg-dark { background-color: #ffffff; }
-    .light-mode .bg-dark-card { background-color: #f5f5f5; }
-    .light-mode .text-white { color: #1a1a1a; }
-    .light-mode .text-gray-400 { color: #666666; }
-    .light-mode .text-gray-500 { color: #888888; }
-    .light-mode .border-dark-border { border-color: #e5e5e5; }
-    .water-bottle { width: 60px; height: 120px; border: 3px solid; border-radius: 10px; position: relative; overflow: hidden; }
-    .water-fill { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, #00d4ff 0%, #00ff88 100%); transition: height 0.3s; }
-    .pie-chart { background: conic-gradient(#00ff88 0deg calc(var(--protein) * 3.6deg), #00d4ff calc(var(--protein) * 3.6deg) calc((var(--protein) + var(--carbs)) * 3.6deg), #ff6b6b calc((var(--protein) + var(--carbs)) * 3.6deg) 360deg); }
+    .pie-chart {
+      background: conic-gradient(
+        #00ff88 0deg calc(var(--protein) * 3.6deg),
+        #00d4ff calc(var(--protein) * 3.6deg) calc((var(--protein) + var(--carbs)) * 3.6deg),
+        #ff6b6b calc((var(--protein) + var(--carbs)) * 3.6deg) 360deg
+      );
+    }
+    .water-bottle { width: 50px; height: 100px; border: 3px solid #00d4ff; border-radius: 8px; position: relative; overflow: hidden; }
+    .water-fill { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, #00d4ff 0%, #00ff88 100%); }
+    /* Light Mode */
+    body.light-mode { background-color: #f0f0f5; color: #1a1a1a; }
+    body.light-mode .bg-dark { background-color: #ffffff; }
+    body.light-mode .bg-dark-card { background-color: #f0f0f5; }
+    body.light-mode .bg-dark\/80 { background-color: rgba(255,255,255,0.9); }
+    body.light-mode .bg-dark\/50 { background-color: rgba(240,240,245,0.8); }
+    body.light-mode .text-white { color: #1a1a1a; }
+    body.light-mode .text-gray-400 { color: #555555; }
+    body.light-mode .text-gray-500 { color: #777777; }
+    body.light-mode .border-dark-border { border-color: #d0d0d8; }
+    body.light-mode .bg-dark-border { background-color: #d0d0d8; }
+    body.light-mode textarea { background-color: #e0e0e8; color: #1a1a1a; }
   </style>
-  <style>body { box-sizing: border-box; }</style>
- </head>
- <body class="h-full bg-dark font-space text-white overflow-auto">
-  <div id="app" class="w-full h-full"><!-- PAGE 1: ONBOARDING FORM -->
-   <div id="page-onboarding" class="w-full min-h-full page-transition"><!-- Header -->
+</head>
+<body class="bg-dark font-space text-white overflow-auto">
+<div id="app" class="w-full min-h-screen">
+
+  <!-- PAGE 1: FORM -->
+  <div id="page-onboarding" class="w-full min-h-screen page-transition">
     <header class="w-full px-6 py-4 border-b border-dark-border bg-dark/80 backdrop-blur-sm sticky top-0 z-50">
-     <div class="max-w-4xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-2"><span class="text-2xl">💪</span> <span class="text-xl font-bold">FitForge Pro</span>
+      <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="text-2xl">💪</span><span class="text-xl font-bold">FitForge Pro</span></div>
+        <div class="flex items-center gap-3">
+          <button id="theme-toggle" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors"><span id="theme-icon">🌙</span></button>
+          <span class="text-sm text-gray-400">Your AI Coach</span>
+        </div>
       </div>
-      <div class="flex items-center gap-4"><button id="theme-toggle" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors"> <span id="theme-icon">🌙</span> </button>
-       <div class="text-sm text-gray-400">
-        Your AI Coach
-       </div>
-      </div>
-     </div>
-    </header><!-- Progress -->
-    <div class="w-full px-6 py-4 bg-dark-card border-b border-dark-border sticky top-16 z-40">
-     <div class="max-w-4xl mx-auto">
-      <div class="flex justify-between mb-2"><span class="text-sm text-gray-400">Progress</span> <span id="progress-text" class="text-sm text-neon font-bold">0%</span>
-      </div>
-      <div class="w-full h-2 bg-dark-border rounded-full overflow-hidden">
-       <div id="progress-bar" class="h-full progress-fill transition-all duration-500" style="width: 0%"></div>
-      </div>
-     </div>
-    </div><!-- Main Content -->
-    <main class="w-full px-6 py-12">
-     <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-12">
-       <h1 id="main-headline" class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-neon to-cyan bg-clip-text text-transparent">Build Your Perfect Fitness Plan</h1>
-       <p id="subheadline" class="text-lg text-gray-400 max-w-2xl mx-auto">Answer a few questions and we'll create a personalized workout and diet plan tailored to your goals</p>
-      </div>
-      <div id="questions-container" class="space-y-8"><!-- Q1: Gender -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="1">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">
-          👤
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">What's your gender?</h3>
-          <p class="text-sm text-gray-400">Helps calculate accurate BMR</p>
-         </div>
-        </div>
-        <div class="grid grid-cols-3 gap-3"><button class="gender-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="male">🧑 Male</button> <button class="gender-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="female">👩 Female</button> <button class="gender-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="other">🧬 Other</button>
-        </div>
-       </div><!-- Q2: Weight -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="2" style="animation-delay: 0.1s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">
-          ⚖️
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">What's your weight?</h3>
-          <p class="text-sm text-gray-400">For calorie &amp; supplement calculations</p>
-         </div>
-        </div>
-        <div class="flex gap-4 items-end">
-         <div class="flex-1"><input type="range" id="weight-slider" min="40" max="150" value="70" class="w-full accent-neon">
-          <div class="flex justify-between text-xs text-gray-500 mt-1">
-           <span>40</span><span>150</span>
-          </div>
-         </div>
-         <div class="flex items-center gap-2"><span id="weight-value" class="text-4xl font-bold text-neon">70</span> <select id="weight-unit" class="bg-dark-border text-white px-3 py-2 rounded-lg border border-dark-border focus:border-neon outline-none"> <option value="kg">kg</option> <option value="lbs">lbs</option> </select>
-         </div>
-        </div>
-       </div><!-- Q3: Height -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="3" style="animation-delay: 0.15s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">
-          📏
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">What's your height?</h3>
-          <p class="text-sm text-gray-400">Used in BMR calculations</p>
-         </div>
-        </div>
-        <div class="flex gap-4 items-end">
-         <div class="flex-1"><input type="range" id="height-slider" min="140" max="210" value="175" class="w-full accent-neon">
-          <div class="flex justify-between text-xs text-gray-500 mt-1">
-           <span>140</span><span>210</span>
-          </div>
-         </div>
-         <div class="flex items-center gap-2"><span id="height-value" class="text-4xl font-bold text-cyan">175</span> <span id="height-unit" class="px-3 py-2 bg-dark-border rounded-lg text-white">cm</span>
-         </div>
-        </div>
-       </div><!-- Q4: Age -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="4" style="animation-delay: 0.2s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">
-          📅
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Age range?</h3>
-          <p class="text-sm text-gray-400">Affects recovery &amp; metabolism</p>
-         </div>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3"><button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="15-18">15-18</button> <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="19-25">19-25</button> <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="26-35">26-35</button> <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="36-50">36-50</button> <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="50+">50+</button>
-        </div>
-       </div><!-- Q5: Goal -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="5" style="animation-delay: 0.25s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">
-          🎯
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Primary goal?</h3>
-          <p class="text-sm text-gray-400">Everything adapts to this</p>
-         </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><button class="goal-option option-btn p-6 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-left" data-value="muscle">
-          <div class="flex items-center gap-4">
-           <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon/20 to-cyan/10 flex items-center justify-center text-3xl">
-            💪
-           </div>
-           <div>
-            <h4 class="text-lg font-bold">Gain Muscle</h4>
-            <p class="text-sm text-gray-400">Build strength &amp; size</p>
-           </div>
-          </div></button> <button class="goal-option option-btn p-6 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-left" data-value="weight">
-          <div class="flex items-center gap-4">
-           <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan/20 to-neon/10 flex items-center justify-center text-3xl">
-            🔥
-           </div>
-           <div>
-            <h4 class="text-lg font-bold">Lose Weight</h4>
-            <p class="text-sm text-gray-400">Burn fat &amp; get lean</p>
-           </div>
-          </div></button>
-        </div>
-       </div><!-- Q6: Equipment -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="6" style="animation-delay: 0.3s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">
-          🏋️
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">What equipment do you have?</h3>
-          <p class="text-sm text-gray-400">We'll design around your setup</p>
-         </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><button class="equipment-option option-btn p-6 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-left" data-value="bodyweight">
-          <div class="flex items-center gap-4">
-           <div class="text-3xl">
-            🏃
-           </div>
-           <div>
-            <h4 class="text-lg font-bold">Bodyweight Only</h4>
-            <p class="text-sm text-gray-400">Home workouts</p>
-           </div>
-          </div></button> <button class="equipment-option option-btn p-6 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-left" data-value="gym">
-          <div class="flex items-center gap-4">
-           <div class="text-3xl">
-            🏋️
-           </div>
-           <div>
-            <h4 class="text-lg font-bold">Gym Equipment</h4>
-            <p class="text-sm text-gray-400">Full access</p>
-           </div>
-          </div></button>
-        </div>
-       </div><!-- Q7: Strength Level -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="7" style="animation-delay: 0.35s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">
-          📊
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Fitness level?</h3>
-          <p class="text-sm text-gray-400">We'll adjust intensity</p>
-         </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4"><button class="level-option option-btn p-5 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-center" data-value="beginner">
-          <div class="text-3xl mb-2">
-           🌱
-          </div><h4 class="font-bold">Beginner</h4><p class="text-xs text-gray-400 mt-1">New to fitness</p></button> <button class="level-option option-btn p-5 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-center" data-value="intermediate">
-          <div class="text-3xl mb-2">
-           💪
-          </div><h4 class="font-bold">Intermediate</h4><p class="text-xs text-gray-400 mt-1">1-2 years</p></button> <button class="level-option option-btn p-5 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-center" data-value="advanced">
-          <div class="text-3xl mb-2">
-           🔥
-          </div><h4 class="font-bold">Advanced</h4><p class="text-xs text-gray-400 mt-1">3+ years</p></button>
-        </div>
-       </div><!-- Q8: Days Per Week -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="8" style="animation-delay: 0.4s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">
-          📆
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Days per week?</h3>
-          <p class="text-sm text-gray-400">Smart split optimization</p>
-         </div>
-        </div>
-        <div class="flex flex-wrap gap-3"><button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="2">2 days</button> <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="3">3 days</button> <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="4">4 days</button> <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="5">5 days</button> <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="6">6 days</button>
-        </div>
-       </div><!-- Q9: Session Duration -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="9" style="animation-delay: 0.45s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">
-          ⏱️
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Time per session?</h3>
-          <p class="text-sm text-gray-400">We'll fit exercises in</p>
-         </div>
-        </div>
-        <div class="flex flex-wrap gap-3"><button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="20">20 min</button> <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="30">30 min</button> <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="45">45 min</button> <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="60">60 min</button> <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="90">90 min</button>
-        </div>
-       </div><!-- Q10: Workout Schedule Preference -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="10" style="animation-delay: 0.5s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">
-          🕐
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Workout time preference?</h3>
-          <p class="text-sm text-gray-400">Affects meal timing recommendations</p>
-         </div>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3"><button class="schedule-option option-btn p-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all text-center" data-value="morning">
-          <div class="text-2xl mb-1">
-           🌅
-          </div><span class="text-sm font-medium">Morning</span> </button> <button class="schedule-option option-btn p-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all text-center" data-value="afternoon">
-          <div class="text-2xl mb-1">
-           ☀️
-          </div><span class="text-sm font-medium">Afternoon</span> </button> <button class="schedule-option option-btn p-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all text-center" data-value="evening">
-          <div class="text-2xl mb-1">
-           🌙
-          </div><span class="text-sm font-medium">Evening</span> </button> <button class="schedule-option option-btn p-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all text-center" data-value="flexible">
-          <div class="text-2xl mb-1">
-           🔄
-          </div><span class="text-sm font-medium">Flexible</span> </button>
-        </div>
-       </div><!-- Q11: Sleep Hours -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="11" style="animation-delay: 0.55s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">
-          😴
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Sleep hours per night?</h3>
-          <p class="text-sm text-gray-400">Critical for recovery</p>
-         </div>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3"><button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="<5">&lt; 5 hrs</button> <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="6">6 hrs</button> <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="7">7 hrs</button> <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="8">8 hrs</button> <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="9+">9+ hrs</button>
-        </div>
-       </div><!-- Q12: Health Conditions/Injuries -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="12" style="animation-delay: 0.6s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">
-          ⚠️
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Health conditions/injuries?</h3>
-          <p class="text-sm text-gray-400">Affects exercise recommendations</p>
-         </div>
-        </div>
-        <div class="space-y-2"><label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all group"> <input type="checkbox" class="health-check" data-value="none" checked class="hidden">
-          <div class="w-5 h-5 border-2 border-dark-border rounded group-hover:border-neon/50 transition-all"></div><span class="text-sm">No issues</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all group"> <input type="checkbox" class="health-check" data-value="lower-back" class="hidden">
-          <div class="w-5 h-5 border-2 border-dark-border rounded group-hover:border-neon/50 transition-all"></div><span class="text-sm">Lower back pain</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all group"> <input type="checkbox" class="health-check" data-value="knee-issues" class="hidden">
-          <div class="w-5 h-5 border-2 border-dark-border rounded group-hover:border-neon/50 transition-all"></div><span class="text-sm">Knee issues</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all group"> <input type="checkbox" class="health-check" data-value="shoulder-injury" class="hidden">
-          <div class="w-5 h-5 border-2 border-dark-border rounded group-hover:border-neon/50 transition-all"></div><span class="text-sm">Shoulder injury</span> </label> <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all group"> <input type="checkbox" class="health-check" data-value="heart-condition" class="hidden">
-          <div class="w-5 h-5 border-2 border-dark-border rounded group-hover:border-neon/50 transition-all"></div><span class="text-sm">Heart condition</span> </label>
-        </div>
-       </div><!-- Q13: Dietary Preference -->
-       <div class="question-card bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up" data-question="13" style="animation-delay: 0.65s">
-        <div class="flex items-center gap-3 mb-4">
-         <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">
-          🍽️
-         </div>
-         <div>
-          <h3 class="text-xl font-semibold">Dietary preference?</h3>
-          <p class="text-sm text-gray-400">For meal planning</p>
-         </div>
-        </div>
-        <div class="flex gap-3"><button class="dietary-option option-btn px-6 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="veg">🥗 Vegetarian</button> <button class="dietary-option option-btn px-6 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="non-veg">🍗 Non-Vegetarian</button>
-        </div>
-       </div><!-- CTA -->
-       <div class="mt-12 text-center"><button id="generate-btn" class="px-12 py-5 bg-gradient-to-r from-neon to-cyan text-dark font-bold text-lg rounded-2xl neon-glow transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 animate-shimmer"> Generate My Plan → </button>
-        <p id="cta-hint" class="text-sm text-gray-500 mt-3">Complete all 13 questions</p>
-       </div>
-      </div>
-     </div>
-    </main>
-   </div><!-- PAGE 2: WORKOUT PLAN -->
-   <div id="page-workout" class="w-full min-h-full hidden page-transition">
-    <header class="w-full px-6 py-4 border-b border-dark-border bg-dark/80 backdrop-blur-sm sticky top-0 z-50">
-     <div class="max-w-5xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-4"><button id="back-to-form" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg></button> <span class="text-2xl">💪</span> <span class="font-bold">Workout Plan</span>
-      </div>
-      <div class="flex items-center gap-4">
-       <div class="flex items-center gap-2 text-neon font-bold"><span>🔥</span> <span id="streak-count">0</span>
-       </div><button id="theme-toggle-w" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors"> <span>🌙</span> </button>
-      </div>
-     </div>
     </header>
-    <main class="w-full px-6 py-8">
-     <div class="max-w-5xl mx-auto"><!-- Daily Quote -->
-      <div class="bg-gradient-to-r from-neon/10 to-cyan/10 rounded-xl p-4 mb-6 border border-neon/30">
-       <p id="daily-quote" class="text-center italic text-gray-300 text-sm">"The only bad workout is the one that didn't happen."</p>
-      </div><!-- Summary -->
-      <div class="bg-gradient-to-br from-dark-card to-dark-border/30 rounded-2xl p-6 mb-8 border border-dark-border">
-       <h2 class="text-2xl font-bold mb-4">Your <span class="text-neon">Personalized Plan</span></h2>
-       <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <div class="bg-dark/50 rounded-lg p-3">
-         <p class="text-xs text-gray-400">Goal</p>
-         <p id="summary-goal" class="font-bold text-neon">Muscle</p>
+    <div class="w-full px-6 py-3 bg-dark-card border-b border-dark-border sticky top-16 z-40">
+      <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between mb-1"><span class="text-sm text-gray-400">Progress</span><span id="progress-text" class="text-sm text-neon font-bold">0%</span></div>
+        <div class="w-full h-2 bg-dark-border rounded-full overflow-hidden">
+          <div id="progress-bar" class="h-full progress-fill transition-all duration-500" style="width:0%"></div>
         </div>
-        <div class="bg-dark/50 rounded-lg p-3">
-         <p class="text-xs text-gray-400">Days/Wk</p>
-         <p id="summary-days" class="font-bold text-cyan">4</p>
-        </div>
-        <div class="bg-dark/50 rounded-lg p-3">
-         <p class="text-xs text-gray-400">Time</p>
-         <p id="summary-time" class="font-bold text-neon">60 min</p>
-        </div>
-        <div class="bg-dark/50 rounded-lg p-3">
-         <p class="text-xs text-gray-400">Level</p>
-         <p id="summary-level" class="font-bold text-cyan">Int</p>
-        </div>
-        <div class="bg-dark/50 rounded-lg p-3">
-         <p class="text-xs text-gray-400">Equipment</p>
-         <p id="summary-equip" class="font-bold text-neon">Gym</p>
-        </div>
-       </div>
-      </div><!-- Day Tabs -->
-      <div id="day-tabs" class="flex gap-2 mb-6 overflow-x-auto pb-2"></div><!-- Workout Content -->
-      <div id="workout-content" class="space-y-4 mb-12"></div><!-- Action Buttons -->
-      <div class="flex gap-3 mb-8"><button id="print-plan-btn" class="flex-1 px-6 py-4 bg-dark-card border-2 border-neon/30 text-neon font-bold rounded-xl hover:bg-neon/10 transition-all"> 📄 Print Plan </button> <button id="get-diet-btn" class="flex-1 px-6 py-4 bg-gradient-to-r from-neon to-cyan text-dark font-bold rounded-xl neon-glow hover:scale-105 transition-all"> 🍎 Get Diet Plan → </button>
       </div>
-     </div>
-    </main><!-- Rest Timer -->
-    <div id="rest-timer" class="fixed bottom-6 right-6 bg-gradient-to-r from-neon/20 to-cyan/20 border-2 border-neon rounded-full px-6 py-3 hidden">
-     <div class="text-sm font-bold text-neon">
-      Rest: <span id="rest-time">60</span>s
-     </div>
     </div>
-   </div><!-- PAGE 3: DIET PLAN -->
-   <div id="page-diet" class="w-full min-h-full hidden page-transition">
+    <main class="w-full px-6 py-10">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10">
+          <h1 class="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-neon to-cyan bg-clip-text text-transparent">Build Your Perfect Fitness Plan</h1>
+          <p class="text-lg text-gray-400">Answer a few questions and get a personalized workout + diet plan</p>
+        </div>
+        <div class="space-y-6">
+
+          <!-- Q1: Gender -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">👤</div>
+              <div><h3 class="text-lg font-semibold">What's your gender?</h3><p class="text-sm text-gray-400">Helps calculate accurate BMR</p></div>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <button class="gender-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="male">🧑 Male</button>
+              <button class="gender-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="female">👩 Female</button>
+              <button class="gender-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="other">🧬 Other</button>
+            </div>
+          </div>
+
+          <!-- Q2: Weight -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">⚖️</div>
+              <div><h3 class="text-lg font-semibold">What's your weight?</h3><p class="text-sm text-gray-400">For calorie calculations</p></div>
+            </div>
+            <div class="flex gap-4 items-end flex-wrap">
+              <div class="flex-1 min-w-[200px]">
+                <input type="range" id="weight-slider" min="40" max="150" value="70" class="w-full accent-neon">
+                <div class="flex justify-between text-xs text-gray-500 mt-1"><span>40</span><span>150</span></div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="weight-value" class="text-4xl font-bold text-neon">70</span>
+                <select id="weight-unit" class="bg-dark-border text-white px-3 py-2 rounded-lg border border-dark-border focus:border-neon outline-none">
+                  <option value="kg">kg</option><option value="lbs">lbs</option>
+                </select>
+              </div>
+            </div>
+            <button id="confirm-weight-btn" class="mt-3 px-4 py-2 bg-neon/10 border border-neon/30 text-neon text-sm rounded-lg hover:bg-neon/20 transition-all">✓ Confirm Weight</button>
+          </div>
+
+          <!-- Q3: Height -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">📏</div>
+              <div><h3 class="text-lg font-semibold">What's your height?</h3><p class="text-sm text-gray-400">Used in BMR calculations</p></div>
+            </div>
+            <div class="flex gap-4 items-end flex-wrap">
+              <div class="flex-1 min-w-[200px]">
+                <input type="range" id="height-slider" min="140" max="210" value="175" class="w-full accent-neon">
+                <div class="flex justify-between text-xs text-gray-500 mt-1"><span>140cm</span><span>210cm</span></div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="height-value" class="text-4xl font-bold text-cyan">175</span>
+                <span class="px-3 py-2 bg-dark-border rounded-lg">cm</span>
+              </div>
+            </div>
+            <button id="confirm-height-btn" class="mt-3 px-4 py-2 bg-neon/10 border border-neon/30 text-neon text-sm rounded-lg hover:bg-neon/20 transition-all">✓ Confirm Height</button>
+          </div>
+
+          <!-- Q4: Age -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">📅</div>
+              <div><h3 class="text-lg font-semibold">Age range?</h3><p class="text-sm text-gray-400">Affects metabolism & recovery</p></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+              <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="15-18">15-18</button>
+              <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="19-25">19-25</button>
+              <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="26-35">26-35</button>
+              <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="36-50">36-50</button>
+              <button class="age-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="50+">50+</button>
+            </div>
+          </div>
+
+          <!-- Q5: Goal -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">🎯</div>
+              <div><h3 class="text-lg font-semibold">Primary goal?</h3><p class="text-sm text-gray-400">Everything adapts to this</p></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button class="goal-option option-btn p-6 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-left" data-value="muscle">
+                <div class="flex items-center gap-4"><div class="w-14 h-14 rounded-2xl bg-neon/20 flex items-center justify-center text-3xl">💪</div><div><h4 class="text-lg font-bold">Gain Muscle</h4><p class="text-sm text-gray-400">Build strength & size</p></div></div>
+              </button>
+              <button class="goal-option option-btn p-6 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-left" data-value="weight">
+                <div class="flex items-center gap-4"><div class="w-14 h-14 rounded-2xl bg-cyan/20 flex items-center justify-center text-3xl">🔥</div><div><h4 class="text-lg font-bold">Lose Weight</h4><p class="text-sm text-gray-400">Burn fat & get lean</p></div></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Q6: Equipment -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">🏋️</div>
+              <div><h3 class="text-lg font-semibold">Equipment available?</h3><p class="text-sm text-gray-400">We'll design around your setup</p></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button class="equipment-option option-btn p-6 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-left" data-value="bodyweight">
+                <div class="flex items-center gap-4"><div class="text-3xl">🏃</div><div><h4 class="text-lg font-bold">Bodyweight Only</h4><p class="text-sm text-gray-400">Home workouts, no equipment</p></div></div>
+              </button>
+              <button class="equipment-option option-btn p-6 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-left" data-value="gym">
+                <div class="flex items-center gap-4"><div class="text-3xl">🏋️</div><div><h4 class="text-lg font-bold">Gym Equipment</h4><p class="text-sm text-gray-400">Full gym access</p></div></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Q7: Level -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">📊</div>
+              <div><h3 class="text-lg font-semibold">Fitness level?</h3><p class="text-sm text-gray-400">Adjusts intensity & exercise selection</p></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button class="level-option option-btn p-5 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-center" data-value="beginner">
+                <div class="text-3xl mb-2">🌱</div><h4 class="font-bold">Beginner</h4><p class="text-xs text-gray-400 mt-1">New to fitness</p>
+              </button>
+              <button class="level-option option-btn p-5 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-center" data-value="intermediate">
+                <div class="text-3xl mb-2">💪</div><h4 class="font-bold">Intermediate</h4><p class="text-xs text-gray-400 mt-1">1-2 years training</p>
+              </button>
+              <button class="level-option option-btn p-5 rounded-2xl border-2 border-dark-border hover:border-neon/50 transition-all card-glow text-center" data-value="advanced">
+                <div class="text-3xl mb-2">🔥</div><h4 class="font-bold">Advanced</h4><p class="text-xs text-gray-400 mt-1">3+ years training</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- Q8: Days -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">📆</div>
+              <div><h3 class="text-lg font-semibold">Days per week?</h3><p class="text-sm text-gray-400">Smart split optimization</p></div>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="2">2 days</button>
+              <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="3">3 days</button>
+              <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="4">4 days</button>
+              <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="5">5 days</button>
+              <button class="days-option option-btn px-6 py-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-bold text-lg" data-value="6">6 days</button>
+            </div>
+          </div>
+
+          <!-- Q9: Time -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">⏱️</div>
+              <div><h3 class="text-lg font-semibold">Time per session?</h3><p class="text-sm text-gray-400">We'll fit the exercises in</p></div>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="20">20 min</button>
+              <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="30">30 min</button>
+              <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="45">45 min</button>
+              <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="60">60 min</button>
+              <button class="time-option option-btn px-5 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="90">90 min</button>
+            </div>
+          </div>
+
+          <!-- Q10: Schedule -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">🕐</div>
+              <div><h3 class="text-lg font-semibold">Workout time preference?</h3><p class="text-sm text-gray-400">Affects meal timing recommendations</p></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <button class="schedule-option option-btn p-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all text-center" data-value="morning"><div class="text-2xl mb-1">🌅</div><span class="text-sm font-medium">Morning</span></button>
+              <button class="schedule-option option-btn p-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all text-center" data-value="afternoon"><div class="text-2xl mb-1">☀️</div><span class="text-sm font-medium">Afternoon</span></button>
+              <button class="schedule-option option-btn p-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all text-center" data-value="evening"><div class="text-2xl mb-1">🌙</div><span class="text-sm font-medium">Evening</span></button>
+              <button class="schedule-option option-btn p-4 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all text-center" data-value="flexible"><div class="text-2xl mb-1">🔄</div><span class="text-sm font-medium">Flexible</span></button>
+            </div>
+          </div>
+
+          <!-- Q11: Sleep -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">😴</div>
+              <div><h3 class="text-lg font-semibold">Sleep hours per night?</h3><p class="text-sm text-gray-400">Critical for recovery</p></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+              <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="<5">< 5 hrs</button>
+              <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="6">6 hrs</button>
+              <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="7">7 hrs</button>
+              <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="8">8 hrs</button>
+              <button class="sleep-option option-btn px-4 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium text-sm" data-value="9+">9+ hrs</button>
+            </div>
+          </div>
+
+          <!-- Q12: Health -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan/10 flex items-center justify-center">⚠️</div>
+              <div><h3 class="text-lg font-semibold">Health conditions / injuries?</h3><p class="text-sm text-gray-400">Select all that apply</p></div>
+            </div>
+            <div class="space-y-2" id="health-options">
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all">
+                <input type="checkbox" class="health-check w-4 h-4 accent-neon" data-value="none"><span class="text-sm">✅ No issues</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all">
+                <input type="checkbox" class="health-check w-4 h-4 accent-neon" data-value="lower-back"><span class="text-sm">🔴 Lower back pain</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all">
+                <input type="checkbox" class="health-check w-4 h-4 accent-neon" data-value="knee-issues"><span class="text-sm">🔴 Knee issues</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all">
+                <input type="checkbox" class="health-check w-4 h-4 accent-neon" data-value="shoulder-injury"><span class="text-sm">🔴 Shoulder injury</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-lg border border-dark-border hover:border-neon/30 cursor-pointer transition-all">
+                <input type="checkbox" class="health-check w-4 h-4 accent-neon" data-value="heart-condition"><span class="text-sm">🔴 Heart condition</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q13: Diet -->
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border slide-in-up">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-neon/10 flex items-center justify-center">🍽️</div>
+              <div><h3 class="text-lg font-semibold">Dietary preference?</h3><p class="text-sm text-gray-400">For your meal plan</p></div>
+            </div>
+            <div class="flex gap-3 flex-wrap">
+              <button class="dietary-option option-btn px-6 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="veg">🥗 Vegetarian</button>
+              <button class="dietary-option option-btn px-6 py-3 rounded-xl border-2 border-dark-border hover:border-neon/50 transition-all font-medium" data-value="non-veg">🍗 Non-Vegetarian</button>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="mt-10 text-center">
+            <button id="generate-btn" disabled class="px-12 py-5 bg-gradient-to-r from-neon to-cyan text-dark font-bold text-lg rounded-2xl neon-glow transition-all duration-300 hover:scale-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100">Generate My Plan →</button>
+            <p id="cta-hint" class="text-sm text-gray-500 mt-3">Complete all 13 questions to generate your plan</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- PAGE 2: WORKOUT -->
+  <div id="page-workout" class="w-full min-h-screen hidden page-transition">
     <header class="w-full px-6 py-4 border-b border-dark-border bg-dark/80 backdrop-blur-sm sticky top-0 z-50">
-     <div class="max-w-5xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-4"><button id="back-to-workout" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg></button> <span class="text-2xl">🍎</span> <span class="font-bold">Diet Plan</span>
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button id="back-to-form" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <span class="text-2xl">💪</span><span class="font-bold text-lg">Workout Plan</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1 text-neon font-bold"><span>🔥</span><span id="streak-count">0</span></div>
+          <button id="theme-toggle-w" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors"><span>🌙</span></button>
+        </div>
       </div>
-      <div class="flex items-center gap-2"><button id="7day-toggle" class="px-4 py-2 bg-dark-card border border-neon/30 text-neon text-sm rounded-lg hover:border-neon/50 transition-all font-medium"> 7-Day Plan ↔️ </button> <button id="theme-toggle-d" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors"> <span>🌙</span> </button>
-      </div>
-     </div>
     </header>
     <main class="w-full px-6 py-8">
-     <div class="max-w-5xl mx-auto"><!-- Daily Quote -->
-      <div class="bg-gradient-to-r from-neon/10 to-cyan/10 rounded-xl p-4 mb-6 border border-neon/30">
-       <p id="diet-quote" class="text-center italic text-gray-300 text-sm">"You can't out-train a bad diet."</p>
-      </div><!-- Calorie Overview -->
-      <div class="bg-gradient-to-br from-dark-card to-dark-border/30 rounded-2xl p-8 mb-8 border border-dark-border">
-       <h2 class="text-2xl font-bold mb-8">Your <span class="text-neon">Nutrition Plan</span></h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div>
-         <p class="text-gray-400 mb-2">Daily Calorie Target</p>
-         <div class="flex items-baseline gap-2"><span id="calorie-target" class="text-6xl font-bold text-neon">2,450</span> <span class="text-2xl text-gray-400">kcal</span>
-         </div>
-         <p id="calorie-desc" class="text-sm text-gray-500 mt-3">Slight surplus for muscle gain</p>
+      <div class="max-w-5xl mx-auto">
+        <div class="bg-gradient-to-r from-neon/10 to-cyan/10 rounded-xl p-4 mb-6 border border-neon/20">
+          <p id="daily-quote" class="text-center italic text-gray-300 text-sm">"The only bad workout is the one that didn't happen."</p>
         </div>
-        <div class="flex justify-center">
-         <div id="macro-pie" class="w-40 h-40 rounded-full pie-chart" style="--protein: 30; --carbs: 45; --fats: 25;"></div>
-        </div>
-       </div><!-- Macro Breakdown -->
-       <div class="grid grid-cols-3 gap-4 mt-8">
-        <div class="bg-dark/50 rounded-xl p-4">
-         <div class="flex justify-between items-center mb-2"><span class="text-gray-400">Protein</span> <span id="protein-grams" class="text-neon font-bold">184g</span>
-         </div>
-         <div class="text-xs text-gray-500 mb-2">
-          30%
-         </div>
-         <div class="h-2 bg-dark-border rounded-full overflow-hidden">
-          <div class="h-full bg-neon" style="width: 30%"></div>
-         </div>
-        </div>
-        <div class="bg-dark/50 rounded-xl p-4">
-         <div class="flex justify-between items-center mb-2"><span class="text-gray-400">Carbs</span> <span id="carbs-grams" class="text-cyan font-bold">276g</span>
-         </div>
-         <div class="text-xs text-gray-500 mb-2">
-          45%
-         </div>
-         <div class="h-2 bg-dark-border rounded-full overflow-hidden">
-          <div class="h-full bg-cyan" style="width: 45%"></div>
-         </div>
-        </div>
-        <div class="bg-dark/50 rounded-xl p-4">
-         <div class="flex justify-between items-center mb-2"><span class="text-gray-400">Fats</span> <span id="fats-grams" class="text-red-400 font-bold">68g</span>
-         </div>
-         <div class="text-xs text-gray-500 mb-2">
-          25%
-         </div>
-         <div class="h-2 bg-dark-border rounded-full overflow-hidden">
-          <div class="h-full bg-red-400" style="width: 25%"></div>
-         </div>
-        </div>
-       </div>
-      </div><!-- Water & Supplements -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"><!-- Water Intake -->
-       <div class="bg-dark-card rounded-2xl p-6 border border-dark-border">
-        <h3 class="text-lg font-bold mb-4">💧 Daily Water Intake</h3>
-        <div class="flex items-end gap-4">
-         <div class="flex-1">
-          <p class="text-3xl font-bold text-cyan" id="water-amount">3.5L</p>
-          <p class="text-xs text-gray-500">+500ml on workout days</p>
-         </div>
-         <div class="flex gap-1">
-          <div class="water-bottle border-cyan" style="height: 80px">
-           <div class="water-fill bg-gradient-to-t from-cyan to-neon" style="height: 50%"></div>
+        <div class="bg-dark-card rounded-2xl p-6 mb-6 border border-dark-border">
+          <h2 class="text-2xl font-bold mb-4">Your <span class="text-neon">Personalized Plan</span></h2>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div class="bg-dark/50 rounded-lg p-3"><p class="text-xs text-gray-400">Goal</p><p id="summary-goal" class="font-bold text-neon">—</p></div>
+            <div class="bg-dark/50 rounded-lg p-3"><p class="text-xs text-gray-400">Days/Wk</p><p id="summary-days" class="font-bold text-cyan">—</p></div>
+            <div class="bg-dark/50 rounded-lg p-3"><p class="text-xs text-gray-400">Time</p><p id="summary-time" class="font-bold text-neon">—</p></div>
+            <div class="bg-dark/50 rounded-lg p-3"><p class="text-xs text-gray-400">Level</p><p id="summary-level" class="font-bold text-cyan">—</p></div>
+            <div class="bg-dark/50 rounded-lg p-3"><p class="text-xs text-gray-400">Equipment</p><p id="summary-equip" class="font-bold text-neon">—</p></div>
           </div>
-          <div class="water-bottle border-cyan" style="height: 80px">
-           <div class="water-fill bg-gradient-to-t from-cyan to-neon" style="height: 40%"></div>
-          </div>
-         </div>
         </div>
-       </div><!-- Meal Timing -->
-       <div class="bg-dark-card rounded-2xl p-6 border border-dark-border">
-        <h3 class="text-lg font-bold mb-4">⏰ Meal Timing</h3>
-        <div class="space-y-2 text-sm">
-         <div class="flex justify-between"><span class="text-gray-400">Breakfast</span> <span class="text-neon font-bold">7:00 AM</span>
-         </div>
-         <div class="flex justify-between"><span class="text-gray-400">Mid-Morning Snack</span> <span class="text-neon font-bold">10:00 AM</span>
-         </div>
-         <div class="flex justify-between"><span class="text-gray-400">Lunch</span> <span class="text-neon font-bold">1:00 PM</span>
-         </div>
-         <div class="flex justify-between"><span class="text-gray-400">Pre-Workout</span> <span class="text-cyan font-bold">4:00 PM</span>
-         </div>
-         <div class="flex justify-between"><span class="text-gray-400">Dinner</span> <span class="text-neon font-bold">7:30 PM</span>
-         </div>
+        <div id="day-tabs" class="flex gap-2 mb-6 overflow-x-auto pb-2"></div>
+        <div id="workout-content" class="space-y-3 mb-8"></div>
+        <div class="flex gap-3">
+          <button id="print-plan-btn" class="flex-1 px-6 py-4 bg-dark-card border-2 border-neon/30 text-neon font-bold rounded-xl hover:bg-neon/10 transition-all">📄 Print Plan</button>
+          <button id="get-diet-btn" class="flex-1 px-6 py-4 bg-gradient-to-r from-neon to-cyan text-dark font-bold rounded-xl neon-glow hover:scale-105 transition-all animate-pulse-neon">🍎 Get Diet Plan →</button>
         </div>
-       </div>
-      </div><!-- Supplements -->
-      <div class="bg-dark-card rounded-2xl p-6 border border-dark-border mb-8">
-       <h3 class="text-lg font-bold mb-4">💊 Recommended Supplements</h3>
-       <div id="supplements-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-       <p class="text-xs text-gray-500 mt-4">⚠️ Supplements are optional. Focus on diet first.</p>
-      </div><!-- 7-Day Meal Plan Toggle -->
-      <div id="7day-section" class="hidden">
-       <h3 class="text-xl font-bold mb-4">📅 7-Day Meal Rotation</h3>
-       <div id="7day-meals" class="space-y-4"></div>
-      </div><!-- Single Day Meals -->
-      <div id="single-day-section">
-       <h3 class="text-xl font-bold mb-4">🍽️ Today's Meals</h3>
-       <div id="meal-cards" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </div><!-- Buttons -->
-      <div class="flex gap-3 mt-12 mb-8"><button id="share-diet-btn" class="flex-1 px-6 py-4 bg-dark-card border-2 border-cyan/30 text-cyan font-bold rounded-xl hover:bg-cyan/10 transition-all"> 📤 Share Plan </button> <button id="restart-btn" class="flex-1 px-6 py-4 bg-dark-card border-2 border-neon/30 text-neon font-bold rounded-xl hover:bg-neon/10 transition-all"> ↺ New Plan </button>
       </div>
-     </div>
     </main>
-   </div>
   </div>
-  <script>
-    // DATA SDK INITIALIZATION
-    let allRecords = [];
-    const dataHandler = {
-      onDataChanged(data) {
-        allRecords = data;
-        updateStreak();
-      }
-    };
-    let dataSdkReady = false;
-    if (window.dataSdk) {
-      window.dataSdk.init(dataHandler).then(result => {
-        if (result.isOk) dataSdkReady = true;
-      });
-    }
 
-    // STATE
-    const state = {
-      gender: null,
-      weight: 70,
-      weightUnit: 'kg',
-      height: 175,
-      age: null,
-      goal: null,
-      equipment: null,
-      level: null,
-      days: null,
-      time: null,
-      schedule: null,
-      sleep: null,
-      health: [],
-      dietary: null,
-      currentDay: 1,
-      completedExercises: {},
-      currentTheme: 'dark'
-    };
+  <!-- PAGE 3: DIET -->
+  <div id="page-diet" class="w-full min-h-screen hidden page-transition">
+    <header class="w-full px-6 py-4 border-b border-dark-border bg-dark/80 backdrop-blur-sm sticky top-0 z-50">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button id="back-to-workout" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <span class="text-2xl">🍎</span><span class="font-bold text-lg">Diet Plan</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="7day-toggle" class="px-4 py-2 bg-dark-card border border-neon/30 text-neon text-sm rounded-lg hover:border-neon/50 transition-all font-medium">7-Day Plan ↔️</button>
+          <button id="theme-toggle-d" class="p-2 rounded-lg border border-dark-border hover:border-neon/50 transition-colors"><span>🌙</span></button>
+        </div>
+      </div>
+    </header>
+    <main class="w-full px-6 py-8">
+      <div class="max-w-5xl mx-auto">
+        <div class="bg-gradient-to-r from-neon/10 to-cyan/10 rounded-xl p-4 mb-6 border border-neon/20">
+          <p id="diet-quote" class="text-center italic text-gray-300 text-sm">"You can't out-train a bad diet."</p>
+        </div>
+        <!-- Calorie Overview -->
+        <div class="bg-dark-card rounded-2xl p-8 mb-6 border border-dark-border">
+          <h2 class="text-2xl font-bold mb-6">Your <span class="text-neon">Nutrition Plan</span></h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+              <p class="text-gray-400 mb-2">Daily Calorie Target</p>
+              <div class="flex items-baseline gap-2">
+                <span id="calorie-target" class="text-6xl font-bold text-neon">—</span>
+                <span class="text-2xl text-gray-400">kcal</span>
+              </div>
+              <p id="calorie-desc" class="text-sm text-gray-500 mt-2">—</p>
+            </div>
+            <div class="flex justify-center">
+              <div id="macro-pie" class="w-36 h-36 rounded-full pie-chart" style="--protein:30;--carbs:45;--fats:25;"></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-4 mt-6">
+            <div class="bg-dark/50 rounded-xl p-4">
+              <div class="flex justify-between mb-1"><span class="text-gray-400 text-sm">Protein</span><span id="protein-grams" class="text-neon font-bold">—</span></div>
+              <div class="flex items-center gap-2"><span id="protein-pct" class="text-xs text-gray-500">30%</span></div>
+              <div class="h-2 bg-dark-border rounded-full mt-2"><div id="protein-bar" class="h-full bg-neon rounded-full" style="width:30%"></div></div>
+            </div>
+            <div class="bg-dark/50 rounded-xl p-4">
+              <div class="flex justify-between mb-1"><span class="text-gray-400 text-sm">Carbs</span><span id="carbs-grams" class="text-cyan font-bold">—</span></div>
+              <div class="flex items-center gap-2"><span id="carbs-pct" class="text-xs text-gray-500">45%</span></div>
+              <div class="h-2 bg-dark-border rounded-full mt-2"><div id="carbs-bar" class="h-full bg-cyan rounded-full" style="width:45%"></div></div>
+            </div>
+            <div class="bg-dark/50 rounded-xl p-4">
+              <div class="flex justify-between mb-1"><span class="text-gray-400 text-sm">Fats</span><span id="fats-grams" class="text-red-400 font-bold">—</span></div>
+              <div class="flex items-center gap-2"><span id="fats-pct" class="text-xs text-gray-500">25%</span></div>
+              <div class="h-2 bg-dark-border rounded-full mt-2"><div id="fats-bar" class="h-full bg-red-400 rounded-full" style="width:25%"></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Water & Timing -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border">
+            <h3 class="text-lg font-bold mb-4">💧 Daily Water Intake</h3>
+            <p class="text-4xl font-bold text-cyan" id="water-amount">—</p>
+            <p class="text-xs text-gray-500 mt-1">+500ml on workout days</p>
+            <div class="flex gap-2 mt-4">
+              <div class="water-bottle"><div class="water-fill" id="water-fill-1" style="height:70%"></div></div>
+              <div class="water-bottle"><div class="water-fill" id="water-fill-2" style="height:70%"></div></div>
+            </div>
+          </div>
+          <div class="bg-dark-card rounded-2xl p-6 border border-dark-border">
+            <h3 class="text-lg font-bold mb-4">⏰ Meal Timing</h3>
+            <div id="meal-timing" class="space-y-2 text-sm"></div>
+          </div>
+        </div>
+        <!-- Supplements -->
+        <div class="bg-dark-card rounded-2xl p-6 border border-dark-border mb-6">
+          <h3 class="text-lg font-bold mb-4">💊 Recommended Supplements</h3>
+          <div id="supplements-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          <p class="text-xs text-gray-500 mt-4">⚠️ Supplements are optional. Focus on whole food diet first.</p>
+        </div>
+        <!-- 7-Day Section (hidden by default) -->
+        <div id="7day-section" class="hidden mb-6">
+          <h3 class="text-xl font-bold mb-4">📅 7-Day Meal Rotation</h3>
+          <div id="7day-meals" class="space-y-4"></div>
+        </div>
+        <!-- Today's Meals -->
+        <div id="single-day-section">
+          <h3 class="text-xl font-bold mb-4">🍽️ Today's Meal Plan</h3>
+          <div id="meal-cards" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+        <div class="flex gap-3 mt-10">
+          <button id="share-diet-btn" class="flex-1 px-6 py-4 bg-dark-card border-2 border-cyan/30 text-cyan font-bold rounded-xl hover:bg-cyan/10 transition-all">📤 Share Plan</button>
+          <button id="restart-btn" class="flex-1 px-6 py-4 bg-dark-card border-2 border-neon/30 text-neon font-bold rounded-xl hover:bg-neon/10 transition-all">↺ New Plan</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
 
-    const quotes = [
-      "The only bad workout is the one that didn't happen.",
-      "Pain is temporary, glory is forever.",
-      "Your body can stand almost anything. It's your mind that you need to convince.",
-      "Discipline is what you do even when you don't want to do it.",
-      "The more you sweat, the less you bleed in battle.",
-      "Don't watch the clock; do what it does. Keep going."
-    ];
+<script>
+// ===================== STATE =====================
+const state = {
+  gender: null,
+  weight: null,       // FIX: null until confirmed
+  weightUnit: 'kg',
+  height: null,       // FIX: null until confirmed
+  age: null,
+  goal: null,
+  equipment: null,
+  level: null,
+  days: null,
+  time: null,
+  schedule: null,
+  sleep: null,
+  health: null,       // FIX: null until at least one checked
+  dietary: null,
+  currentTheme: 'dark',
+  currentPlan: [],
+  mealData: {}
+};
 
-    const dietQuotes = [
-      "You can't out-train a bad diet.",
-      "Abs are made in the kitchen.",
-      "Eat like you love yourself.",
-      "Take care of your body. It's the only place you have to live.",
-      "Nutrition is the foundation of fitness.",
-      "What you eat in private shows in public."
-    ];
+// ===================== THEME =====================
+function toggleTheme() {
+  state.currentTheme = state.currentTheme === 'dark' ? 'light' : 'dark';
+  document.body.classList.toggle('light-mode', state.currentTheme === 'light');
+  document.querySelectorAll('[id*="theme-toggle"]').forEach(btn => {
+    const icon = btn.querySelector('span') || btn;
+    if (btn.tagName === 'BUTTON') btn.innerHTML = state.currentTheme === 'dark' ? '🌙' : '☀️';
+  });
+  document.getElementById('theme-icon').textContent = state.currentTheme === 'dark' ? '🌙' : '☀️';
+}
+document.querySelectorAll('[id*="theme-toggle"]').forEach(btn => btn.addEventListener('click', toggleTheme));
 
-    // THEME TOGGLE
-    function toggleTheme() {
-      state.currentTheme = state.currentTheme === 'dark' ? 'light' : 'dark';
-      const html = document.documentElement;
-      if (state.currentTheme === 'light') {
-        html.classList.add('light-mode');
-      } else {
-        html.classList.remove('light-mode');
-      }
-      document.querySelectorAll('[id*="theme-toggle"]').forEach(btn => {
-        btn.querySelector('span').textContent = state.currentTheme === 'dark' ? '🌙' : '☀️';
-      });
-    }
+// ===================== PROGRESS =====================
+const REQUIRED_FIELDS = ['gender','weight','height','age','goal','equipment','level','days','time','schedule','sleep','health','dietary'];
 
-    document.querySelectorAll('[id*="theme-toggle"]').forEach(btn => {
-      btn.addEventListener('click', toggleTheme);
-    });
+function updateProgress() {
+  const completed = REQUIRED_FIELDS.filter(f => state[f] !== null).length;
+  const pct = Math.round((completed / REQUIRED_FIELDS.length) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = pct + '%';
+  const btn = document.getElementById('generate-btn');
+  const hint = document.getElementById('cta-hint');
+  btn.disabled = pct < 100;
+  if (pct === 100) {
+    hint.textContent = '✅ All done! Click to generate your plan';
+    hint.classList.replace('text-gray-500','text-neon');
+  } else {
+    hint.textContent = `Complete all 13 questions (${completed}/13 done)`;
+    hint.classList.replace('text-neon','text-gray-500');
+  }
+}
 
-    // ELEMENT SDK
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig: {
-          main_headline: 'Build Your Perfect Fitness Plan',
-          subheadline: 'Answer a few questions...',
-          cta_button_text: 'Generate My Plan'
-        },
-        onConfigChange: async (config) => {
-          document.getElementById('main-headline').textContent = config.main_headline;
-          document.getElementById('subheadline').textContent = config.subheadline;
-          document.getElementById('generate-btn').innerHTML = config.cta_button_text + ' →';
-        },
-        mapToCapabilities: (config) => ({
-          recolorables: [],
-          borderables: [],
-          fontEditable: undefined,
-          fontSizeable: undefined
-        }),
-        mapToEditPanelValues: (config) => new Map([
-          ['main_headline', config.main_headline],
-          ['subheadline', config.subheadline],
-          ['cta_button_text', config.cta_button_text]
-        ])
-      });
-    }
-
-    // PROGRESS UPDATE
-    function updateProgress() {
-      const fields = ['gender', 'weight', 'height', 'age', 'goal', 'equipment', 'level', 'days', 'time', 'schedule', 'sleep', 'health', 'dietary'];
-      const completed = fields.filter(f => {
-        if (f === 'health') return state[f].length > 0;
-        return state[f] !== null;
-      }).length;
-      const percent = Math.round((completed / fields.length) * 100);
-      document.getElementById('progress-bar').style.width = percent + '%';
-      document.getElementById('progress-text').textContent = percent + '%';
-      document.getElementById('generate-btn').disabled = percent < 100;
-    }
-
-    // SETUP OPTION BUTTONS
-    function setupOptions(selector, stateKey, isCheckbox = false) {
-      document.querySelectorAll(selector).forEach(btn => {
-        if (isCheckbox) {
-          btn.addEventListener('change', (e) => {
-            const val = e.target.dataset.value;
-            if (e.target.checked) {
-              if (!state[stateKey].includes(val)) state[stateKey].push(val);
-            } else {
-              state[stateKey] = state[stateKey].filter(v => v !== val);
-            }
-            updateProgress();
-          });
-        } else {
-          btn.addEventListener('click', () => {
-            document.querySelectorAll(selector).forEach(b => b.classList.remove('option-selected', 'bounce-select'));
-            btn.classList.add('option-selected', 'bounce-select');
-            state[stateKey] = btn.dataset.value;
-            updateProgress();
-          });
-        }
-      });
-    }
-
-    // SLIDERS
-    document.getElementById('weight-slider').addEventListener('input', (e) => {
-      state.weight = parseInt(e.target.value);
-      document.getElementById('weight-value').textContent = state.weight;
+// ===================== OPTION BUTTONS =====================
+function setupOptions(selector, stateKey) {
+  document.querySelectorAll(selector).forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll(selector).forEach(b => b.classList.remove('option-selected'));
+      btn.classList.add('option-selected');
+      state[stateKey] = btn.dataset.value;
       updateProgress();
     });
+  });
+}
 
-    document.getElementById('height-slider').addEventListener('input', (e) => {
-      state.height = parseInt(e.target.value);
-      document.getElementById('height-value').textContent = state.height;
-      updateProgress();
-    });
+// Weight & Height sliders with confirm buttons
+document.getElementById('weight-slider').addEventListener('input', e => {
+  document.getElementById('weight-value').textContent = e.target.value;
+});
+document.getElementById('confirm-weight-btn').addEventListener('click', () => {
+  state.weight = parseInt(document.getElementById('weight-slider').value);
+  state.weightUnit = document.getElementById('weight-unit').value;
+  document.getElementById('confirm-weight-btn').textContent = '✓ Weight Confirmed!';
+  document.getElementById('confirm-weight-btn').classList.add('bg-neon/30','border-neon');
+  updateProgress();
+});
+document.getElementById('height-slider').addEventListener('input', e => {
+  document.getElementById('height-value').textContent = e.target.value;
+});
+document.getElementById('confirm-height-btn').addEventListener('click', () => {
+  state.height = parseInt(document.getElementById('height-slider').value);
+  document.getElementById('confirm-height-btn').textContent = '✓ Height Confirmed!';
+  document.getElementById('confirm-height-btn').classList.add('bg-neon/30','border-neon');
+  updateProgress();
+});
+document.getElementById('weight-unit').addEventListener('change', e => { state.weightUnit = e.target.value; });
 
-    document.getElementById('weight-unit').addEventListener('change', (e) => {
-      state.weightUnit = e.target.value;
-    });
-
-    // SETUP ALL OPTIONS
-    setupOptions('.gender-option', 'gender');
-    setupOptions('.age-option', 'age');
-    setupOptions('.goal-option', 'goal');
-    setupOptions('.equipment-option', 'equipment');
-    setupOptions('.level-option', 'level');
-    setupOptions('.days-option', 'days');
-    setupOptions('.time-option', 'time');
-    setupOptions('.schedule-option', 'schedule');
-    setupOptions('.sleep-option', 'sleep');
-    setupOptions('.dietary-option', 'dietary');
-    setupOptions('.health-check', 'health', true);
-
+// Health checkboxes — fixed
+document.querySelectorAll('.health-check').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const checked = Array.from(document.querySelectorAll('.health-check:checked')).map(c => c.dataset.value);
+    state.health = checked.length > 0 ? checked : null;
     updateProgress();
+  });
+});
 
-    // EXERCISE DATABASE
-    const exercises = {
-      bodyweight: {
-        muscle: {
-          warm: [
-            { name: '5-min Cardio Warm-up', icon: '🏃', sets: 1, reps: '5 min', rest: '—', difficulty: '🟢' },
-            { name: 'Dynamic Stretching', icon: '🤸', sets: 1, reps: '5 min', rest: '—', difficulty: '🟢' },
-            { name: 'Mobility Drill', icon: '⚙️', sets: 1, reps: '5 min', rest: '—', difficulty: '🟢' }
-          ],
-          upper: [
-            { name: 'Push-ups', icon: '💪', sets: 4, reps: '12-15', rest: '60s', difficulty: '🟡' },
-            { name: 'Pull-ups', icon: '🏋️', sets: 4, reps: '8-10', rest: '90s', difficulty: '🔴' },
-            { name: 'Dips', icon: '⬇️', sets: 3, reps: '12-15', rest: '60s', difficulty: '🟡' },
-            { name: 'Diamond Push-ups', icon: '💎', sets: 3, reps: '10-12', rest: '60s', difficulty: '🟡' }
-          ],
-          lower: [
-            { name: 'Squats', icon: '🦵', sets: 4, reps: '15-20', rest: '60s', difficulty: '🟡' },
-            { name: 'Lunges', icon: '🚶', sets: 3, reps: '12 each', rest: '60s', difficulty: '🟡' },
-            { name: 'Glute Bridges', icon: '🌉', sets: 3, reps: '15-20', rest: '45s', difficulty: '🟢' },
-            { name: 'Calf Raises', icon: '🦶', sets: 4, reps: '20-25', rest: '30s', difficulty: '🟢' }
-          ],
-          cooldown: [
-            { name: 'Chest & Shoulder Stretch', icon: '🤸', sets: 1, reps: '30s each', rest: '—', difficulty: '🟢' },
-            { name: 'Hamstring Stretch', icon: '🧘', sets: 1, reps: '30s each', rest: '—', difficulty: '🟢' },
-            { name: 'Full Body Cooldown', icon: '😌', sets: 1, reps: '2 min', rest: '—', difficulty: '🟢' }
-          ]
-        }
-      },
-      gym: {
-        muscle: {
-          warm: [
-            { name: 'Treadmill Warm-up', icon: '🏃', sets: 1, reps: '5 min', rest: '—', difficulty: '🟢' },
-            { name: 'Dynamic Stretching', icon: '🤸', sets: 1, reps: '5 min', rest: '—', difficulty: '🟢' },
-            { name: 'Joint Mobility', icon: '⚙️', sets: 1, reps: '5 min', rest: '—', difficulty: '🟢' }
-          ],
-          push: [
-            { name: 'Barbell Bench Press', icon: '🏋️', sets: 4, reps: '8-10', rest: '90s', difficulty: '🔴', alt: 'Dumbbell Bench' },
-            { name: 'Incline Dumbbell Press', icon: '📐', sets: 4, reps: '10-12', rest: '75s', difficulty: '🟡', alt: 'Machine Press' },
-            { name: 'Tricep Pushdowns', icon: '⬇️', sets: 3, reps: '12-15', rest: '45s', difficulty: '🟡', alt: 'Dips' },
-            { name: 'Shoulder Press', icon: '🔝', sets: 3, reps: '10-12', rest: '75s', difficulty: '🟡', alt: 'Pike Push-ups' }
-          ],
-          pull: [
-            { name: 'Deadlifts', icon: '🏋️', sets: 4, reps: '6-8', rest: '120s', difficulty: '🔴', alt: 'Trap Bar Deadlift' },
-            { name: 'Barbell Rows', icon: '🚣', sets: 4, reps: '8-10', rest: '90s', difficulty: '🔴', alt: 'Dumbbell Rows' },
-            { name: 'Lat Pulldowns', icon: '⬇️', sets: 4, reps: '10-12', rest: '75s', difficulty: '🟡', alt: 'Assisted Pull-ups' },
-            { name: 'Bicep Curls', icon: '💪', sets: 3, reps: '10-12', rest: '45s', difficulty: '🟡', alt: 'Cable Curls' }
-          ],
-          legs: [
-            { name: 'Barbell Squats', icon: '🦵', sets: 4, reps: '8-10', rest: '120s', difficulty: '🔴', alt: 'Leg Press' },
-            { name: 'Romanian Deadlifts', icon: '🏋️', sets: 4, reps: '10-12', rest: '90s', difficulty: '🟡', alt: 'Leg Curls' },
-            { name: 'Leg Extensions', icon: '➡️', sets: 3, reps: '12-15', rest: '60s', difficulty: '🟡', alt: 'Hack Squats' },
-            { name: 'Calf Raises', icon: '🦶', sets: 4, reps: '15-20', rest: '45s', difficulty: '🟡', alt: 'Seated Calf Raise' }
-          ],
-          cooldown: [
-            { name: 'Quad Stretch', icon: '🧘', sets: 1, reps: '30s each', rest: '—', difficulty: '🟢' },
-            { name: 'Back Stretch', icon: '🤸', sets: 1, reps: '30s', rest: '—', difficulty: '🟢' },
-            { name: 'Full Cooldown', icon: '😌', sets: 1, reps: '2 min', rest: '—', difficulty: '🟢' }
-          ]
-        }
-      }
-    };
+setupOptions('.gender-option','gender');
+setupOptions('.age-option','age');
+setupOptions('.goal-option','goal');
+setupOptions('.equipment-option','equipment');
+setupOptions('.level-option','level');
+setupOptions('.days-option','days');
+setupOptions('.time-option','time');
+setupOptions('.schedule-option','schedule');
+setupOptions('.sleep-option','sleep');
+setupOptions('.dietary-option','dietary');
 
-    // MEAL DATABASE
-    const meals = {
-      muscle: {
-        veg: {
-          breakfast: [
-            { name: 'Protein Oats', cal: 650, protein: '25g', carbs: '75g', fats: '15g', ingredients: ['Oats', 'Protein Powder', 'Banana', 'Almond Butter'] },
-            { name: 'Veggie Egg Bowl', cal: 680, protein: '28g', carbs: '70g', fats: '16g', ingredients: ['4 Eggs', 'Spinach', 'Toast', 'Cheese'] },
-            { name: 'Greek Yogurt Parfait', cal: 620, protein: '30g', carbs: '65g', fats: '14g', ingredients: ['Greek Yogurt', 'Granola', 'Berries', 'Honey'] },
-            { name: 'Lentil Pancakes', cal: 700, protein: '26g', carbs: '78g', fats: '18g', ingredients: ['Lentil Flour', 'Eggs', 'Maple Syrup', 'Butter'] },
-            { name: 'Paneer Paratha', cal: 680, protein: '24g', carbs: '75g', fats: '17g', ingredients: ['Paneer', 'Whole Wheat', 'Yogurt', 'Oil'] }
-          ],
-          lunch: [
-            { name: 'Chickpea Curry Rice', cal: 720, protein: '22g', carbs: '85g', fats: '16g', ingredients: ['Chickpeas', 'Basmati Rice', 'Coconut Milk', 'Veggies'] },
-            { name: 'Lentil Dhal Rice', cal: 700, protein: '24g', carbs: '82g', fats: '15g', ingredients: ['Red Lentils', 'Brown Rice', 'Turmeric', 'Oil'] },
-            { name: 'Tofu Stir-fry', cal: 680, protein: '26g', carbs: '75g', fats: '17g', ingredients: ['Tofu', 'Brown Rice', 'Mixed Veggies', 'Sesame Oil'] },
-            { name: 'Paneer Buddha Bowl', cal: 710, protein: '28g', carbs: '78g', fats: '18g', ingredients: ['Paneer', 'Quinoa', 'Roasted Veggies', 'Tahini'] },
-            { name: 'Bean & Veggie Burrito', cal: 690, protein: '25g', carbs: '80g', fats: '16g', ingredients: ['Black Beans', 'Tortilla', 'Veggies', 'Cheese'] }
-          ],
-          dinner: [
-            { name: 'Paneer Tikka Masala', cal: 680, protein: '26g', carbs: '72g', fats: '17g', ingredients: ['Paneer', 'Sweet Potato', 'Yogurt', 'Spices'] },
-            { name: 'Vegetable Biryani', cal: 700, protein: '23g', carbs: '82g', fats: '18g', ingredients: ['Basmati', 'Veggies', 'Eggs', 'Spices'] },
-            { name: 'Tofu Curry Rice', cal: 670, protein: '24g', carbs: '78g', fats: '16g', ingredients: ['Tofu', 'White Rice', 'Curry Paste', 'Veggies'] },
-            { name: 'Lentil Soup Bread', cal: 650, protein: '22g', carbs: '75g', fats: '15g', ingredients: ['Lentils', 'Whole Grain', 'Vegetable Broth', 'Herbs'] },
-            { name: 'Bean Enchiladas', cal: 710, protein: '26g', carbs: '80g', fats: '18g', ingredients: ['Beans', 'Tortillas', 'Cheese Sauce', 'Peppers'] }
-          ],
-          snacks: [
-            { name: 'Protein Shake', cal: 280, protein: '25g', carbs: '30g', fats: '8g', ingredients: ['Whey Protein', 'Banana', 'Almond Milk'] },
-            { name: 'Greek Yogurt Berries', cal: 220, protein: '20g', carbs: '25g', fats: '5g', ingredients: ['Greek Yogurt', 'Mixed Berries', 'Honey'] },
-            { name: 'Cheese & Crackers', cal: 240, protein: '12g', carbs: '28g', fats: '10g', ingredients: ['Cheese', 'Whole Grain Crackers'] }
-          ]
-        },
-        'non-veg': {
-          breakfast: [
-            { name: 'Egg Scramble', cal: 650, protein: '32g', carbs: '65g', fats: '16g', ingredients: ['5 Eggs', 'Whole Wheat Toast', 'Avocado', 'Tomato'] },
-            { name: 'Chicken Oats', cal: 680, protein: '35g', carbs: '72g', fats: '17g', ingredients: ['Oats', 'Chicken Breast', 'Banana', 'Almonds'] },
-            { name: 'Salmon Toast', cal: 700, protein: '36g', carbs: '68g', fats: '18g', ingredients: ['Salmon', 'Whole Grain Bread', 'Cream Cheese', 'Cucumber'] },
-            { name: 'Steak & Eggs', cal: 750, protein: '40g', carbs: '60g', fats: '20g', ingredients: ['Beef Steak', '3 Eggs', 'Sweet Potato', 'Spinach'] },
-            { name: 'Turkey Pancakes', cal: 680, protein: '33g', carbs: '75g', fats: '17g', ingredients: ['Ground Turkey', 'Eggs', 'Maple Syrup', 'Butter'] }
-          ],
-          lunch: [
-            { name: 'Grilled Chicken Rice', cal: 720, protein: '40g', carbs: '80g', fats: '16g', ingredients: ['Chicken Breast', 'Basmati Rice', 'Broccoli', 'Oil'] },
-            { name: 'Salmon Sweet Potato', cal: 700, protein: '38g', carbs: '75g', fats: '17g', ingredients: ['Salmon', 'Sweet Potato', 'Asparagus', 'Lemon'] },
-            { name: 'Beef Bowl', cal: 740, protein: '42g', carbs: '82g', fats: '18g', ingredients: ['Lean Beef', 'Brown Rice', 'Mixed Veggies'] },
-            { name: 'Tuna Pasta', cal: 680, protein: '36g', carbs: '78g', fats: '16g', ingredients: ['Canned Tuna', 'Whole Wheat Pasta', 'Olive Oil', 'Veggies'] },
-            { name: 'Chicken Fried Rice', cal: 710, protein: '38g', carbs: '79g', fats: '17g', ingredients: ['Chicken', 'Fried Rice', 'Egg', 'Veggies'] }
-          ],
-          dinner: [
-            { name: 'Grilled Chicken Potatoes', cal: 680, protein: '39g', carbs: '75g', fats: '16g', ingredients: ['Chicken Breast', 'Baked Potato', 'Green Beans', 'Oil'] },
-            { name: 'Salmon Risotto', cal: 710, protein: '38g', carbs: '80g', fats: '18g', ingredients: ['Salmon', 'Arborio Rice', 'Peas', 'Parmesan'] },
-            { name: 'Beef Stir-fry', cal: 700, protein: '40g', carbs: '77g', fats: '17g', ingredients: ['Lean Beef', 'Brown Rice', 'Mixed Veggies', 'Sesame Oil'] },
-            { name: 'Turkey Meatballs', cal: 670, protein: '37g', carbs: '73g', fats: '16g', ingredients: ['Ground Turkey', 'Whole Wheat Pasta', 'Tomato Sauce'] },
-            { name: 'Lamb Curry', cal: 720, protein: '36g', carbs: '80g', fats: '18g', ingredients: ['Lamb', 'Basmati Rice', 'Curry Sauce', 'Veggies'] }
-          ],
-          snacks: [
-            { name: 'Protein Shake Chicken', cal: 320, protein: '35g', carbs: '28g', fats: '9g', ingredients: ['Whey Protein', 'Banana', 'Almond Milk'] },
-            { name: 'Turkey & Cheese', cal: 280, protein: '28g', carbs: '20g', fats: '12g', ingredients: ['Turkey Breast', 'Cheese', 'Whole Grain Crackers'] },
-            { name: 'Tuna Snack', cal: 240, protein: '30g', carbs: '15g', fats: '8g', ingredients: ['Canned Tuna', 'Whole Grain Crackers', 'Avocado'] }
-          ]
-        }
-      },
-      weight: {
-        veg: {
-          breakfast: [
-            { name: 'Light Veggie Scramble', cal: 380, protein: '18g', carbs: '42g', fats: '12g', ingredients: ['2 Eggs', 'Spinach', 'Mushrooms', 'Whole Grain Toast'] },
-            { name: 'Oat Bowl', cal: 350, protein: '12g', carbs: '45g', fats: '10g', ingredients: ['Oats', 'Berries', 'Honey', 'Almonds'] },
-            { name: 'Green Smoothie', cal: 320, protein: '15g', carbs: '40g', fats: '8g', ingredients: ['Spinach', 'Banana', 'Protein Powder', 'Almond Milk'] },
-            { name: 'Tofu Breakfast', cal: 340, protein: '16g', carbs: '38g', fats: '11g', ingredients: ['Tofu', 'Whole Wheat Toast', 'Tomato', 'Olive Oil'] },
-            { name: 'Chickpea Salad', cal: 360, protein: '14g', carbs: '42g', fats: '12g', ingredients: ['Chickpeas', 'Mixed Greens', 'Tahini', 'Lemon'] }
-          ],
-          lunch: [
-            { name: 'Lentil Salad', cal: 420, protein: '16g', carbs: '52g', fats: '12g', ingredients: ['Red Lentils', 'Mixed Greens', 'Veggies', 'Olive Oil'] },
-            { name: 'Tofu Stir-fry', cal: 400, protein: '18g', carbs: '48g', fats: '11g', ingredients: ['Tofu', 'Brown Rice', 'Mixed Veggies', 'Low-Sodium Sauce'] },
-            { name: 'Chickpea Wrap', cal: 410, protein: '15g', carbs: '50g', fats: '13g', ingredients: ['Whole Wheat Wrap', 'Chickpeas', 'Hummus', 'Veggies'] },
-            { name: 'Vegetable Soup Rice', cal: 390, protein: '14g', carbs: '46g', fats: '12g', ingredients: ['Vegetable Broth', 'Brown Rice', 'Mixed Veggies'] },
-            { name: 'Bean Burrito Bowl', cal: 420, protein: '16g', carbs: '52g', fats: '12g', ingredients: ['Black Beans', 'Brown Rice', 'Salsa', 'Veggies'] }
-          ],
-          dinner: [
-            { name: 'Vegetable Curry', cal: 400, protein: '14g', carbs: '48g', fats: '12g', ingredients: ['Mixed Veggies', 'Chickpeas', 'Light Coconut Milk', 'Brown Rice'] },
-            { name: 'Lentil Pasta', cal: 410, protein: '16g', carbs: '50g', fats: '11g', ingredients: ['Whole Wheat Pasta', 'Lentils', 'Marinara', 'Veggies'] },
-            { name: 'Tofu Bowl', cal: 390, protein: '17g', carbs: '45g', fats: '12g', ingredients: ['Tofu', 'Quinoa', 'Roasted Veggies', 'Tahini'] },
-            { name: 'Veggie Stir-fry', cal: 380, protein: '13g', carbs: '44g', fats: '13g', ingredients: ['Mixed Veggies', 'Brown Rice', 'Sesame Oil', 'Low-Sodium Sauce'] },
-            { name: 'Bean Chili', cal: 420, protein: '15g', carbs: '52g', fats: '11g', ingredients: ['Mixed Beans', 'Tomatoes', 'Veggies', 'Spices'] }
-          ],
-          snacks: [
-            { name: 'Green Tea & Berries', cal: 150, protein: '2g', carbs: '32g', fats: '1g', ingredients: ['Green Tea', 'Mixed Berries', 'Honey'] },
-            { name: 'Hummus & Veggies', cal: 180, protein: '8g', carbs: '20g', fats: '8g', ingredients: ['Hummus', 'Cucumber', 'Carrots', 'Bell Pepper'] },
-            { name: 'Apple & Almond Butter', cal: 200, protein: '7g', carbs: '24g', fats: '9g', ingredients: ['Apple', 'Almond Butter'] }
-          ]
-        },
-        'non-veg': {
-          breakfast: [
-            { name: 'Lean Egg White', cal: 380, protein: '28g', carbs: '38g', fats: '10g', ingredients: ['5 Egg Whites', 'Whole Grain Toast', 'Turkey Sausage'] },
-            { name: 'Chicken Oats', cal: 420, protein: '32g', carbs: '45g', fats: '11g', ingredients: ['Oats', 'Chicken Breast', 'Berries', 'Almonds'] },
-            { name: 'Salmon Toast', cal: 400, protein: '30g', carbs: '42g', fats: '12g', ingredients: ['Salmon', 'Whole Grain', 'Avocado', 'Lemon'] },
-            { name: 'Turkey Breakfast', cal: 390, protein: '35g', carbs: '38g', fats: '11g', ingredients: ['Ground Turkey', 'Sweet Potato', 'Spinach', 'Oil'] },
-            { name: 'Egg Scramble', cal: 380, protein: '26g', carbs: '40g', fats: '12g', ingredients: ['3 Eggs', 'Bacon', 'Toast', 'Tomato'] }
-          ],
-          lunch: [
-            { name: 'Grilled Chicken Salad', cal: 420, protein: '38g', carbs: '35g', fats: '12g', ingredients: ['Chicken Breast', 'Mixed Greens', 'Veggies', 'Olive Oil Dressing'] },
-            { name: 'Tuna Brown Rice', cal: 400, protein: '36g', carbs: '42g', fats: '10g', ingredients: ['Canned Tuna', 'Brown Rice', 'Veggies', 'Low-Fat Mayo'] },
-            { name: 'Lean Beef Bowl', cal: 410, protein: '40g', carbs: '40g', fats: '12g', ingredients: ['Lean Beef', 'Brown Rice', 'Broccoli'] },
-            { name: 'Turkey Wrap', cal: 390, protein: '35g', carbs: '42g', fats: '10g', ingredients: ['Turkey Breast', 'Whole Wheat Wrap', 'Hummus', 'Veggies'] },
-            { name: 'Salmon Bowl', cal: 420, protein: '38g', carbs: '45g', fats: '11g', ingredients: ['Salmon', 'Quinoa', 'Veggies', 'Lemon'] }
-          ],
-          dinner: [
-            { name: 'Grilled Chicken Veggies', cal: 400, protein: '38g', carbs: '40g', fats: '11g', ingredients: ['Chicken Breast', 'Roasted Veggies', 'Brown Rice'] },
-            { name: 'Fish & Potato', cal: 410, protein: '36g', carbs: '45g', fats: '10g', ingredients: ['White Fish', 'Sweet Potato', 'Green Beans'] },
-            { name: 'Lean Turkey Pasta', cal: 420, protein: '38g', carbs: '46g', fats: '11g', ingredients: ['Ground Turkey', 'Whole Wheat Pasta', 'Tomato Sauce'] },
-            { name: 'Salmon Veggies', cal: 400, protein: '35g', carbs: '42g', fats: '12g', ingredients: ['Salmon', 'Roasted Veggies', 'Olive Oil', 'Lemon'] },
-            { name: 'Chicken Stir-fry', cal: 410, protein: '37g', carbs: '44g', fats: '11g', ingredients: ['Chicken', 'Brown Rice', 'Mixed Veggies', 'Low-Sodium Sauce'] }
-          ],
-          snacks: [
-            { name: 'Protein Shake', cal: 200, protein: '25g', carbs: '18g', fats: '5g', ingredients: ['Whey Protein', 'Banana', 'Almond Milk'] },
-            { name: 'Turkey & Rice Cake', cal: 180, protein: '22g', carbs: '15g', fats: '6g', ingredients: ['Turkey Breast', 'Rice Cakes', 'Mustard'] },
-            { name: 'Tuna Snack', cal: 160, protein: '26g', carbs: '10g', fats: '4g', ingredients: ['Canned Tuna', 'Low-Fat Mayo'] }
-          ]
-        }
-      }
-    };
+updateProgress();
 
-    const supplements = {
-      muscle: [
-        { name: 'Whey Protein', when: 'Post-workout', benefits: 'Muscle recovery & growth' },
-        { name: 'Creatine Monohydrate', when: 'Daily (5g)', benefits: 'Strength & power output' },
-        { name: 'Multivitamin', when: 'With breakfast', benefits: 'Fill nutrient gaps' },
-        { name: 'Omega-3 Fish Oil', when: 'Daily (2-3g)', benefits: 'Joint health & recovery' }
+// ===================== EXERCISE DATABASE =====================
+const exercises = {
+  bodyweight: {
+    muscle: {
+      upper: [
+        { name:'Push-ups', icon:'💪', sets:4, reps:'12-15', rest:'60s', difficulty:'🟡' },
+        { name:'Diamond Push-ups', icon:'💎', sets:3, reps:'10-12', rest:'60s', difficulty:'🟡' },
+        { name:'Pull-ups', icon:'🏋️', sets:4, reps:'8-10', rest:'90s', difficulty:'🔴' },
+        { name:'Dips', icon:'⬇️', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡' },
+        { name:'Pike Push-ups', icon:'🔺', sets:3, reps:'10-12', rest:'60s', difficulty:'🟡' },
+        { name:'Chin-ups', icon:'💪', sets:3, reps:'8-10', rest:'90s', difficulty:'🔴' },
+        { name:'Tricep Dips', icon:'🪑', sets:3, reps:'10-12', rest:'60s', difficulty:'🟢' },
+        { name:'Archer Push-ups', icon:'🏹', sets:3, reps:'8 each', rest:'75s', difficulty:'🔴' },
       ],
-      weight: [
-        { name: 'Whey Protein', when: 'Post-workout', benefits: 'Preserve muscle while losing fat' },
-        { name: 'CLA (Conjugated Linoleic Acid)', when: 'With meals (3-6g)', benefits: 'Enhanced fat loss' },
-        { name: 'Green Tea Extract', when: 'Morning (300-400mg)', benefits: 'Boost metabolism' },
-        { name: 'Multivitamin', when: 'With breakfast', benefits: 'Support on calorie deficit' }
+      lower: [
+        { name:'Squats', icon:'🦵', sets:4, reps:'15-20', rest:'60s', difficulty:'🟢' },
+        { name:'Bulgarian Split Squats', icon:'🦿', sets:3, reps:'10 each', rest:'60s', difficulty:'🔴' },
+        { name:'Lunges', icon:'🚶', sets:3, reps:'12 each', rest:'60s', difficulty:'🟡' },
+        { name:'Glute Bridges', icon:'🌉', sets:3, reps:'15-20', rest:'45s', difficulty:'🟢' },
+        { name:'Jump Squats', icon:'🦘', sets:3, reps:'15', rest:'45s', difficulty:'🟡' },
+        { name:'Calf Raises', icon:'🦶', sets:4, reps:'20-25', rest:'30s', difficulty:'🟢' },
+        { name:'Reverse Lunges', icon:'🔄', sets:3, reps:'12 each', rest:'60s', difficulty:'🟡' },
+        { name:'Step-ups', icon:'📈', sets:3, reps:'12 each', rest:'60s', difficulty:'🟡' },
+      ],
+      core: [
+        { name:'Plank', icon:'📏', sets:3, reps:'45-60s', rest:'30s', difficulty:'🟡' },
+        { name:'Side Plank', icon:'➡️', sets:3, reps:'30s each', rest:'30s', difficulty:'🟡' },
+        { name:'Mountain Climbers', icon:'⛰️', sets:3, reps:'30s', rest:'30s', difficulty:'🟡' },
+        { name:'Leg Raises', icon:'🦵', sets:3, reps:'12-15', rest:'45s', difficulty:'🟡' },
+        { name:'Russian Twists', icon:'🔄', sets:3, reps:'20 total', rest:'30s', difficulty:'🟡' },
+        { name:'Dead Bug', icon:'🐛', sets:3, reps:'12', rest:'30s', difficulty:'🟢' },
+        { name:'Superman Hold', icon:'🦸', sets:3, reps:'30s', rest:'30s', difficulty:'🟢' },
+        { name:'Bicycle Crunches', icon:'🚲', sets:3, reps:'20', rest:'30s', difficulty:'🟡' },
+      ],
+      fullbody: [
+        { name:'Burpees', icon:'🔥', sets:3, reps:'10', rest:'60s', difficulty:'🔴' },
+        { name:'Push-ups', icon:'💪', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡' },
+        { name:'Squats', icon:'🦵', sets:3, reps:'15-20', rest:'60s', difficulty:'🟢' },
+        { name:'Mountain Climbers', icon:'⛰️', sets:3, reps:'30s', rest:'30s', difficulty:'🟡' },
+        { name:'Lunges', icon:'🚶', sets:3, reps:'10 each', rest:'60s', difficulty:'🟡' },
+        { name:'Plank', icon:'📏', sets:3, reps:'45s', rest:'30s', difficulty:'🟡' },
+        { name:'Glute Bridges', icon:'🌉', sets:3, reps:'15', rest:'45s', difficulty:'🟢' },
+        { name:'Tricep Dips', icon:'🪑', sets:3, reps:'12', rest:'60s', difficulty:'🟢' },
       ]
+    },
+    weight: {
+      cardio: [
+        { name:'Burpees', icon:'🔥', sets:4, reps:'12', rest:'45s', difficulty:'🔴' },
+        { name:'Jump Squats', icon:'🦘', sets:4, reps:'15-20', rest:'45s', difficulty:'🟡' },
+        { name:'High Knees', icon:'🏃', sets:3, reps:'45s', rest:'30s', difficulty:'🟡' },
+        { name:'Mountain Climbers', icon:'⛰️', sets:4, reps:'45s', rest:'30s', difficulty:'🟡' },
+        { name:'Jumping Jacks', icon:'⭐', sets:3, reps:'60s', rest:'20s', difficulty:'🟢' },
+        { name:'Skater Hops', icon:'⛸️', sets:3, reps:'30s', rest:'30s', difficulty:'🟡' },
+        { name:'Box Jumps', icon:'📦', sets:4, reps:'10', rest:'60s', difficulty:'🔴' },
+        { name:'Jump Rope', icon:'🪢', sets:4, reps:'60s', rest:'30s', difficulty:'🟡' },
+      ],
+      circuit: [
+        { name:'Push-ups', icon:'💪', sets:3, reps:'15-20', rest:'45s', difficulty:'🟡' },
+        { name:'Squats', icon:'🦵', sets:3, reps:'20-25', rest:'45s', difficulty:'🟢' },
+        { name:'Lunges', icon:'🚶', sets:3, reps:'15 each', rest:'45s', difficulty:'🟡' },
+        { name:'Plank', icon:'📏', sets:3, reps:'45s', rest:'30s', difficulty:'🟡' },
+        { name:'Mountain Climbers', icon:'⛰️', sets:3, reps:'30s', rest:'30s', difficulty:'🟡' },
+        { name:'Tricep Dips', icon:'🪑', sets:3, reps:'12-15', rest:'45s', difficulty:'🟢' },
+        { name:'Glute Bridges', icon:'🌉', sets:3, reps:'20', rest:'30s', difficulty:'🟢' },
+        { name:'Burpees', icon:'🔥', sets:3, reps:'10', rest:'60s', difficulty:'🔴' },
+      ],
+      fullbody: [
+        { name:'Burpees', icon:'🔥', sets:3, reps:'10', rest:'45s', difficulty:'🔴' },
+        { name:'Jump Squats', icon:'🦘', sets:3, reps:'15', rest:'45s', difficulty:'🟡' },
+        { name:'Push-ups', icon:'💪', sets:3, reps:'15', rest:'45s', difficulty:'🟡' },
+        { name:'High Knees', icon:'🏃', sets:3, reps:'40s', rest:'20s', difficulty:'🟡' },
+        { name:'Lunges', icon:'🚶', sets:3, reps:'12 each', rest:'45s', difficulty:'🟡' },
+        { name:'Plank', icon:'📏', sets:3, reps:'40s', rest:'30s', difficulty:'🟡' },
+        { name:'Mountain Climbers', icon:'⛰️', sets:3, reps:'30s', rest:'30s', difficulty:'🟡' },
+        { name:'Glute Bridges', icon:'🌉', sets:3, reps:'20', rest:'30s', difficulty:'🟢' },
+      ]
+    }
+  },
+  gym: {
+    muscle: {
+      push: [
+        { name:'Barbell Bench Press', icon:'🏋️', sets:4, reps:'8-10', rest:'90s', difficulty:'🔴', alt:'Dumbbell Bench' },
+        { name:'Incline Dumbbell Press', icon:'📐', sets:4, reps:'10-12', rest:'75s', difficulty:'🟡', alt:'Machine Press' },
+        { name:'Shoulder Press', icon:'🔝', sets:3, reps:'10-12', rest:'75s', difficulty:'🟡', alt:'Arnold Press' },
+        { name:'Cable Flyes', icon:'🦋', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡', alt:'Pec Deck' },
+        { name:'Tricep Pushdowns', icon:'⬇️', sets:3, reps:'12-15', rest:'45s', difficulty:'🟡', alt:'Overhead Extension' },
+        { name:'Lateral Raises', icon:'↔️', sets:3, reps:'12-15', rest:'45s', difficulty:'🟢', alt:'Cable Lateral' },
+        { name:'Skull Crushers', icon:'💀', sets:3, reps:'10-12', rest:'60s', difficulty:'🟡', alt:'Dips' },
+        { name:'Front Raises', icon:'⬆️', sets:3, reps:'12-15', rest:'45s', difficulty:'🟢', alt:'Cable Front Raise' },
+      ],
+      pull: [
+        { name:'Deadlifts', icon:'🏋️', sets:4, reps:'6-8', rest:'120s', difficulty:'🔴', alt:'Trap Bar Deadlift' },
+        { name:'Barbell Rows', icon:'🚣', sets:4, reps:'8-10', rest:'90s', difficulty:'🔴', alt:'Dumbbell Rows' },
+        { name:'Lat Pulldowns', icon:'⬇️', sets:4, reps:'10-12', rest:'75s', difficulty:'🟡', alt:'Assisted Pull-ups' },
+        { name:'Bicep Curls', icon:'💪', sets:3, reps:'10-12', rest:'45s', difficulty:'🟡', alt:'Cable Curls' },
+        { name:'Face Pulls', icon:'🎯', sets:3, reps:'15-20', rest:'45s', difficulty:'🟢', alt:'Rear Delt Flyes' },
+        { name:'Hammer Curls', icon:'🔨', sets:3, reps:'10-12', rest:'45s', difficulty:'🟡', alt:'Reverse Curls' },
+        { name:'Seated Cable Rows', icon:'🪑', sets:3, reps:'10-12', rest:'60s', difficulty:'🟡', alt:'T-Bar Rows' },
+        { name:'Pull-ups', icon:'🏋️', sets:3, reps:'8-10', rest:'90s', difficulty:'🔴', alt:'Lat Pulldowns' },
+      ],
+      legs: [
+        { name:'Barbell Squats', icon:'🦵', sets:4, reps:'8-10', rest:'120s', difficulty:'🔴', alt:'Leg Press' },
+        { name:'Romanian Deadlifts', icon:'🏋️', sets:4, reps:'10-12', rest:'90s', difficulty:'🟡', alt:'Leg Curls' },
+        { name:'Leg Press', icon:'🦿', sets:3, reps:'12-15', rest:'75s', difficulty:'🟡', alt:'Hack Squat' },
+        { name:'Leg Extensions', icon:'➡️', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡', alt:'Sissy Squats' },
+        { name:'Leg Curls', icon:'🔄', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡', alt:'Nordic Curls' },
+        { name:'Calf Raises', icon:'🦶', sets:4, reps:'15-20', rest:'45s', difficulty:'🟢', alt:'Seated Calf Raise' },
+        { name:'Bulgarian Split Squats', icon:'🦿', sets:3, reps:'10 each', rest:'75s', difficulty:'🔴', alt:'Lunge' },
+        { name:'Hip Thrusts', icon:'🌉', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡', alt:'Glute Kickbacks' },
+      ],
+      upper: [
+        { name:'Barbell Bench Press', icon:'🏋️', sets:4, reps:'8-10', rest:'90s', difficulty:'🔴' },
+        { name:'Barbell Rows', icon:'🚣', sets:4, reps:'8-10', rest:'90s', difficulty:'🔴' },
+        { name:'Shoulder Press', icon:'🔝', sets:3, reps:'10-12', rest:'75s', difficulty:'🟡' },
+        { name:'Lat Pulldowns', icon:'⬇️', sets:3, reps:'10-12', rest:'75s', difficulty:'🟡' },
+        { name:'Bicep Curls', icon:'💪', sets:3, reps:'10-12', rest:'45s', difficulty:'🟡' },
+        { name:'Tricep Pushdowns', icon:'⬇️', sets:3, reps:'12-15', rest:'45s', difficulty:'🟡' },
+        { name:'Face Pulls', icon:'🎯', sets:3, reps:'15-20', rest:'45s', difficulty:'🟢' },
+        { name:'Cable Flyes', icon:'🦋', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡' },
+      ],
+      fullbody: [
+        { name:'Barbell Squats', icon:'🦵', sets:3, reps:'10', rest:'90s', difficulty:'🔴' },
+        { name:'Barbell Bench Press', icon:'🏋️', sets:3, reps:'10', rest:'90s', difficulty:'🔴' },
+        { name:'Deadlifts', icon:'🏋️', sets:3, reps:'8', rest:'120s', difficulty:'🔴' },
+        { name:'Shoulder Press', icon:'🔝', sets:3, reps:'10-12', rest:'75s', difficulty:'🟡' },
+        { name:'Barbell Rows', icon:'🚣', sets:3, reps:'10-12', rest:'75s', difficulty:'🔴' },
+        { name:'Bicep Curls', icon:'💪', sets:2, reps:'12', rest:'45s', difficulty:'🟡' },
+        { name:'Tricep Pushdowns', icon:'⬇️', sets:2, reps:'12', rest:'45s', difficulty:'🟡' },
+        { name:'Calf Raises', icon:'🦶', sets:3, reps:'15-20', rest:'45s', difficulty:'🟢' },
+      ]
+    },
+    weight: {
+      hiit: [
+        { name:'Treadmill Sprints', icon:'🏃', sets:8, reps:'30s on/30s off', rest:'—', difficulty:'🔴' },
+        { name:'Rowing Machine HIIT', icon:'🚣', sets:6, reps:'30s hard', rest:'30s', difficulty:'🔴' },
+        { name:'Battle Ropes', icon:'🌊', sets:4, reps:'30s', rest:'45s', difficulty:'🔴' },
+        { name:'Box Jumps', icon:'📦', sets:4, reps:'12-15', rest:'45s', difficulty:'🟡' },
+        { name:'Kettlebell Swings', icon:'🔔', sets:4, reps:'15-20', rest:'45s', difficulty:'🟡' },
+        { name:'StairMaster Sprints', icon:'🪜', sets:4, reps:'20s', rest:'40s', difficulty:'🟡' },
+        { name:'Jump Rope HIIT', icon:'🪢', sets:5, reps:'40s', rest:'20s', difficulty:'🟡' },
+        { name:'Bike Sprints', icon:'🚴', sets:6, reps:'20s', rest:'40s', difficulty:'🔴' },
+      ],
+      circuit: [
+        { name:'Goblet Squats', icon:'🏆', sets:3, reps:'15-20', rest:'60s', difficulty:'🟡' },
+        { name:'Dumbbell Lunges', icon:'🚶', sets:3, reps:'12 each', rest:'60s', difficulty:'🟡' },
+        { name:'Lat Pulldowns', icon:'⬇️', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡' },
+        { name:'Dumbbell Shoulder Press', icon:'🔝', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡' },
+        { name:'Dumbbell Bench Press', icon:'⚖️', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡' },
+        { name:'Cable Rows', icon:'🚣', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡' },
+        { name:'Medicine Ball Slam', icon:'💣', sets:3, reps:'12', rest:'45s', difficulty:'🟡' },
+        { name:'Kettlebell Goblet Squat', icon:'🏆', sets:3, reps:'15', rest:'60s', difficulty:'🟡' },
+      ],
+      fullbody: [
+        { name:'Barbell Squats', icon:'🦵', sets:3, reps:'15', rest:'75s', difficulty:'🔴' },
+        { name:'Dumbbell Bench Press', icon:'⚖️', sets:3, reps:'15', rest:'75s', difficulty:'🟡' },
+        { name:'Dumbbell Rows', icon:'🚣', sets:3, reps:'15', rest:'75s', difficulty:'🟡' },
+        { name:'Shoulder Press', icon:'🔝', sets:3, reps:'12-15', rest:'60s', difficulty:'🟡' },
+        { name:'Leg Press', icon:'🦿', sets:3, reps:'15-20', rest:'60s', difficulty:'🟡' },
+        { name:'Treadmill Sprints', icon:'🏃', sets:5, reps:'30s on/30s off', rest:'—', difficulty:'🔴' },
+        { name:'Battle Ropes', icon:'🌊', sets:3, reps:'30s', rest:'45s', difficulty:'🔴' },
+        { name:'Kettlebell Swings', icon:'🔔', sets:3, reps:'15', rest:'45s', difficulty:'🟡' },
+      ]
+    }
+  }
+};
+
+const warmup = [
+  { name:'Cardio Warm-up', icon:'🏃', sets:1, reps:'5 min', rest:'—', difficulty:'🟢', isUtility:true },
+  { name:'Dynamic Stretching', icon:'🤸', sets:1, reps:'3 min', rest:'—', difficulty:'🟢', isUtility:true },
+  { name:'Joint Mobility Drill', icon:'⚙️', sets:1, reps:'2 min', rest:'—', difficulty:'🟢', isUtility:true },
+];
+const cooldown = [
+  { name:'Static Stretching', icon:'🧘', sets:1, reps:'2 min', rest:'—', difficulty:'🟢', isUtility:true },
+  { name:'Foam Rolling', icon:'🫀', sets:1, reps:'2 min', rest:'—', difficulty:'🟢', isUtility:true },
+  { name:'Deep Breathing', icon:'😌', sets:1, reps:'1 min', rest:'—', difficulty:'🟢', isUtility:true },
+];
+
+// ===================== SMART SPLIT =====================
+function getSmartSplit() {
+  const days = parseInt(state.days);
+  const isMuscle = state.goal === 'muscle';
+  const isGym = state.equipment === 'gym';
+
+  // WEIGHT LOSS SPLITS
+  if (!isMuscle) {
+    if (!isGym) {
+      const weightBW = ['cardio','circuit','fullbody'];
+      return Array(days).fill().map((_,i) => {
+        const type = weightBW[i % 3];
+        return { name: type==='cardio'?'Fat Burn Cardio':type==='circuit'?'Toning Circuit':'Full Body Burn', type };
+      });
+    } else {
+      const weightGym = ['hiit','circuit','fullbody'];
+      return Array(days).fill().map((_,i) => {
+        const type = weightGym[i % 3];
+        return { name: type==='hiit'?'HIIT Cardio':type==='circuit'?'Strength Circuit':'Full Body', type };
+      });
+    }
+  }
+
+  // MUSCLE GAIN SPLITS
+  if (!isGym) {
+    // Bodyweight muscle
+    const bwTypes = { 2:['upper','lower'], 3:['upper','lower','core'], 4:['upper','lower','core','fullbody'], 5:['upper','lower','core','upper','lower'], 6:['upper','lower','core','upper','lower','fullbody'] };
+    const bwNames = { upper:'Upper Body', lower:'Lower Body', core:'Core & Abs', fullbody:'Full Body' };
+    return (bwTypes[days]||bwTypes[3]).map(t => ({ name:bwNames[t], type:t }));
+  } else {
+    // Gym muscle
+    const gymSplits = {
+      2: [{name:'Full Body A',type:'fullbody'},{name:'Full Body B',type:'fullbody'}],
+      3: [{name:'Push Day',type:'push'},{name:'Pull Day',type:'pull'},{name:'Legs Day',type:'legs'}],
+      4: [{name:'Upper A',type:'upper'},{name:'Lower A',type:'legs'},{name:'Upper B',type:'push'},{name:'Lower B',type:'pull'}],
+      5: [{name:'Chest & Tris',type:'push'},{name:'Back & Bis',type:'pull'},{name:'Legs',type:'legs'},{name:'Shoulders & Core',type:'upper'},{name:'Full Body',type:'fullbody'}],
+      6: [{name:'Push 1',type:'push'},{name:'Pull 1',type:'pull'},{name:'Legs 1',type:'legs'},{name:'Push 2',type:'push'},{name:'Pull 2',type:'pull'},{name:'Legs 2',type:'legs'}]
     };
+    return gymSplits[days] || gymSplits[3];
+  }
+}
 
-    // CALCULATE BMR
-    function calculateBMR() {
-      const kg = state.weightUnit === 'lbs' ? state.weight * 0.453592 : state.weight;
-      const h = state.height;
-      const age = parseInt(state.age.split('-')[0]);
-      
-      let bmr;
-      if (state.gender === 'male') {
-        bmr = 88.362 + (13.397 * kg) + (4.799 * h) - (5.677 * age);
-      } else if (state.gender === 'female') {
-        bmr = 447.593 + (9.247 * kg) + (3.098 * h) - (4.330 * age);
-      } else {
-        bmr = (88.362 + 447.593) / 2 + (13.397 + 9.247) / 2 * kg + (4.799 + 3.098) / 2 * h - (5.677 + 4.330) / 2 * age;
-      }
-      
-      const activityMultipliers = { 2: 1.2, 3: 1.375, 4: 1.55, 5: 1.725, 6: 1.9 };
-      const tdee = bmr * (activityMultipliers[parseInt(state.days)] || 1.55);
-      
-      return state.goal === 'muscle' ? Math.round(tdee * 1.1) : Math.round(tdee * 0.85);
-    }
+// ===================== LEVEL MODIFIER =====================
+function applyLevelModifier(ex) {
+  const e = {...ex};
+  if (state.level === 'beginner') {
+    e.sets = Math.max(2, e.sets - 1);
+    e.rest = e.rest === '—' ? '—' : (parseInt(e.rest) + 15) + 's';
+  } else if (state.level === 'advanced') {
+    e.sets = e.sets + 1;
+    e.rest = e.rest === '—' ? '—' : Math.max(20, parseInt(e.rest) - 15) + 's';
+  }
+  return e;
+}
 
-    // CALCULATE WATER
-    function calculateWater() {
-      const kg = state.weightUnit === 'lbs' ? state.weight * 0.453592 : state.weight;
-      const base = kg * 35 / 1000;
-      const withWorkout = base + 0.5;
-      return (base).toFixed(1) + 'L';
-    }
+// ===================== EXERCISE COUNT =====================
+function getExerciseCount() {
+  const t = parseInt(state.time);
+  if (t <= 20) return 3;
+  if (t <= 30) return 4;
+  if (t <= 45) return 5;
+  if (t <= 60) return 6;
+  return 8;
+}
 
-    // UPDATE STREAK
-    function updateStreak() {
-      let streak = 0;
-      const today = new Date().toISOString().split('T')[0];
-      const sorted = allRecords.filter(r => r.workoutCompleted).sort((a, b) => new Date(b.date) - new Date(a.date));
-      
-      for (let i = 0; i < sorted.length; i++) {
-        const recordDate = new Date(sorted[i].date);
-        const expectedDate = new Date();
-        expectedDate.setDate(expectedDate.getDate() - i);
-        
-        if (recordDate.toISOString().split('T')[0] === expectedDate.toISOString().split('T')[0]) {
-          streak++;
-        } else break;
-      }
-      
-      document.getElementById('streak-count').textContent = streak;
-    }
+// ===================== RENDER WORKOUT =====================
+function renderWorkout() {
+  document.getElementById('summary-goal').textContent = state.goal === 'muscle' ? 'Muscle' : 'Weight Loss';
+  document.getElementById('summary-days').textContent = state.days;
+  document.getElementById('summary-time').textContent = state.time + ' min';
+  document.getElementById('summary-level').textContent = state.level.charAt(0).toUpperCase() + state.level.slice(1);
+  document.getElementById('summary-equip').textContent = state.equipment === 'gym' ? 'Gym' : 'Bodyweight';
 
-    // GET SMART SPLIT
-    function getSmartSplit(days) {
-      const dayNum = parseInt(days);
-      const isMuscle = state.goal === 'muscle';
-      const isGym = state.equipment === 'gym';
-      
-      if (!isMuscle) return Array(dayNum).fill().map((_, i) => ({ name: i % 2 ? 'Cardio' : 'Strength', type: i % 2 ? 'hiit' : 'strength' }));
-      
-      if (!isGym) return Array(dayNum).fill().map((_, i) => {
-        const types = ['upper', 'lower', 'core'];
-        return { name: types[i % 3].charAt(0).toUpperCase() + types[i % 3].slice(1), type: types[i % 3] };
+  const split = getSmartSplit();
+  state.currentPlan = split;
+
+  const tabsDiv = document.getElementById('day-tabs');
+  tabsDiv.innerHTML = '';
+  split.forEach((day, idx) => {
+    const btn = document.createElement('button');
+    btn.className = `day-tab px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${idx === 0 ? 'bg-neon text-dark' : 'bg-dark-card border border-dark-border hover:border-neon/50'}`;
+    btn.textContent = `Day ${idx + 1}: ${day.name}`;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.day-tab').forEach(b => {
+        b.className = 'day-tab px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap bg-dark-card border border-dark-border hover:border-neon/50';
       });
-      
-      const splits = {
-        2: [{ name: 'Full Body A', type: 'push' }, { name: 'Full Body B', type: 'pull' }],
-        3: [{ name: 'Push', type: 'push' }, { name: 'Pull', type: 'pull' }, { name: 'Legs', type: 'legs' }],
-        4: [{ name: 'Upper', type: 'push' }, { name: 'Lower', type: 'legs' }, { name: 'Push', type: 'push' }, { name: 'Pull', type: 'pull' }],
-        5: [
-          { name: 'Push', type: 'push' },
-          { name: 'Pull', type: 'pull' },
-          { name: 'Legs', type: 'legs' },
-          { name: 'Upper', type: 'push' },
-          { name: 'Full Body', type: 'pull' }
-        ],
-        6: [
-          { name: 'Push 1', type: 'push' },
-          { name: 'Pull 1', type: 'pull' },
-          { name: 'Legs 1', type: 'legs' },
-          { name: 'Push 2', type: 'push' },
-          { name: 'Pull 2', type: 'pull' },
-          { name: 'Legs 2', type: 'legs' }
-        ]
-      };
-      return splits[dayNum] || splits[3];
-    }
+      btn.className = 'day-tab px-4 py-2 rounded-lg font-medium transition-all whitespace-nowrap bg-neon text-dark';
+      renderDayContent(day);
+    });
+    tabsDiv.appendChild(btn);
+  });
 
-    // RENDER WORKOUT
-    function renderWorkout() {
-      document.getElementById('summary-goal').textContent = state.goal === 'muscle' ? 'Muscle' : 'Weight';
-      document.getElementById('summary-days').textContent = state.days;
-      document.getElementById('summary-time').textContent = state.time;
-      document.getElementById('summary-level').textContent = state.level.slice(0, 3).toUpperCase();
-      document.getElementById('summary-equip').textContent = state.equipment === 'gym' ? 'Gym' : 'BW';
-      
-      const split = getSmartSplit(state.days);
-      const tabsDiv = document.getElementById('day-tabs');
-      tabsDiv.innerHTML = '';
-      
-      split.forEach((day, idx) => {
-        const btn = document.createElement('button');
-        btn.className = `day-tab px-4 py-2 rounded-lg font-medium transition-all ${idx === 0 ? 'tab-active' : 'tab-inactive'}`;
-        btn.textContent = `Day ${idx + 1}`;
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.day-tab').forEach(b => b.className = b.className.replace('tab-active', 'tab-inactive').replace(state.goal === 'muscle' ? 'bg-neon text-dark' : ''));
-          btn.className = `day-tab px-4 py-2 rounded-lg font-medium transition-all tab-active`;
-          renderDayContent(day, idx);
-        });
-        tabsDiv.appendChild(btn);
-      });
-      
-      renderDayContent(split[0], 0);
-    }
+  renderDayContent(split[0]);
+}
 
-    function renderDayContent(day, dayIndex) {
-      const content = document.getElementById('workout-content');
-      const isGym = state.equipment === 'gym';
-      const key = isGym ? 'gym' : 'bodyweight';
-      const exList = exercises[key].muscle[day.type];
-      
-      if (!exList) {
-        content.innerHTML = '<p class="text-gray-400">No exercises for this split.</p>';
-        return;
-      }
-      
-      let html = `<div class="bg-dark-card rounded-xl p-4 border border-dark-border mb-4">
-        <h3 class="font-bold text-lg">${day.name} Day</h3>
-        <p class="text-sm text-gray-400">Complete all sets with proper form</p>
-      </div>`;
-      
-      // Warm-up
-      const warmups = exercises[key].muscle.warm;
-      warmups.forEach((ex, i) => {
-        html += renderExerciseCard(ex, `warmup-${i}`, true);
-      });
-      
-      // Main exercises
-      exList.slice(0, parseInt(state.time) <= 30 ? 3 : 5).forEach((ex, i) => {
-        html += renderExerciseCard(ex, `ex-${dayIndex}-${i}`);
-      });
-      
-      // Cool-down
-      const cooldown = exercises[key].muscle.cooldown;
-      cooldown.forEach((ex, i) => {
-        html += renderExerciseCard(ex, `cooldown-${i}`, true);
-      });
-      
-      content.innerHTML = html;
-      
-      document.querySelectorAll('.complete-set-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const sets = parseInt(btn.dataset.sets);
-          let completed = parseInt(btn.dataset.completed);
-          completed++;
-          if (completed > sets) completed = 0;
-          btn.dataset.completed = completed;
-          btn.textContent = completed ? `✓ ${completed}/${sets}` : 'Mark Set';
-          btn.classList.toggle('bg-neon/20 border-neon', completed > 0);
-        });
-      });
-    }
+function renderDayContent(day) {
+  const content = document.getElementById('workout-content');
+  const key = state.equipment === 'gym' ? 'gym' : 'bodyweight';
+  const goalKey = state.goal === 'muscle' ? 'muscle' : 'weight';
+  const exList = exercises[key][goalKey][day.type];
 
-    function renderExerciseCard(ex, id, isUtility = false) {
-      return `
-        <div class="bg-dark-card rounded-xl p-4 border border-dark-border mb-3 hover:border-neon/30 transition-all">
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex items-start gap-3 flex-1">
-              <div class="text-3xl">${ex.icon}</div>
-              <div class="flex-1">
-                <h4 class="font-bold">${ex.name}</h4>
-                <div class="flex gap-2 text-xs mt-1 flex-wrap">
-                  <span class="text-neon">${ex.sets} sets</span>
-                  <span class="text-cyan">${ex.reps} reps</span>
-                  <span class="text-gray-400">Rest: ${ex.rest}</span>
-                  <span>${ex.difficulty || ''}</span>
-                </div>
-                <textarea placeholder="Notes..." class="w-full mt-2 p-2 bg-dark-border rounded text-xs text-white resize-none" rows="2"></textarea>
-              </div>
-            </div>
-            ${!isUtility ? `<button class="complete-set-btn px-4 py-2 bg-dark-border hover:bg-neon/20 border border-dark-border hover:border-neon rounded-lg whitespace-nowrap transition-all" data-sets="${ex.sets}" data-completed="0">Mark Set</button>` : '<span class="text-xs text-gray-500">Warm-up</span>'}
+  let html = `<div class="bg-dark-card rounded-xl p-4 border border-dark-border mb-2">
+    <h3 class="font-bold text-lg text-neon">${day.name}</h3>
+    <p class="text-sm text-gray-400">Complete all sets with proper form. Rest as needed.</p>
+  </div>`;
+
+  // Warm-up
+  html += `<div class="text-xs text-gray-500 uppercase tracking-widest px-1 mb-1 mt-3">Warm-up</div>`;
+  warmup.forEach((ex, i) => { html += renderExCard(ex, `warmup-${i}`, true); });
+
+  // Main exercises
+  if (!exList || exList.length === 0) {
+    html += `<div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-red-300">No exercises found for this split. Please try a different combination.</div>`;
+  } else {
+    const count = getExerciseCount();
+    html += `<div class="text-xs text-gray-500 uppercase tracking-widest px-1 mb-1 mt-3">Main Workout</div>`;
+    exList.slice(0, count).forEach((ex, i) => {
+      const modded = applyLevelModifier(ex);
+      html += renderExCard(modded, `ex-${day.type}-${i}`, false);
+    });
+  }
+
+  // Cool-down
+  html += `<div class="text-xs text-gray-500 uppercase tracking-widest px-1 mb-1 mt-3">Cool-down</div>`;
+  cooldown.forEach((ex, i) => { html += renderExCard(ex, `cooldown-${i}`, true); });
+
+  content.innerHTML = html;
+}
+
+function renderExCard(ex, id, isUtility) {
+  return `
+    <div class="bg-dark-card rounded-xl p-4 border border-dark-border hover:border-neon/30 transition-all mb-2">
+      <div class="flex items-start gap-3">
+        <div class="text-3xl shrink-0">${ex.icon}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h4 class="font-bold">${ex.name}</h4>
+            ${!isUtility ? `<span class="text-xs">${ex.difficulty || ''}</span>` : '<span class="text-xs text-gray-500 bg-dark-border px-2 py-0.5 rounded">' + (id.includes('warmup') ? 'Warm-up' : 'Cool-down') + '</span>'}
           </div>
-        </div>
-      `;
-    }
-
-    // RENDER DIET
-    function renderDiet() {
-      const cal = calculateBMR();
-      const waterIntake = calculateWater();
-      
-      document.getElementById('calorie-target').textContent = cal.toLocaleString();
-      document.getElementById('calorie-desc').textContent = state.goal === 'muscle' ? 'Slight surplus for muscle gain' : 'Calorie deficit for fat loss';
-      
-      const macroRatios = state.goal === 'muscle' ? { p: 30, c: 45, f: 25 } : { p: 35, c: 35, f: 30 };
-      document.getElementById('protein-grams').textContent = Math.round((cal * (macroRatios.p / 100)) / 4) + 'g';
-      document.getElementById('carbs-grams').textContent = Math.round((cal * (macroRatios.c / 100)) / 4) + 'g';
-      document.getElementById('fats-grams').textContent = Math.round((cal * (macroRatios.f / 100)) / 9) + 'g';
-      
-      const pie = document.getElementById('macro-pie');
-      pie.style.setProperty('--protein', macroRatios.p);
-      pie.style.setProperty('--carbs', macroRatios.c);
-      pie.style.setProperty('--fats', macroRatios.f);
-      
-      document.getElementById('water-amount').textContent = waterIntake;
-      
-      const suppContainer = document.getElementById('supplements-container');
-      suppContainer.innerHTML = supplements[state.goal].map(s => `
-        <div class="bg-dark-border/30 rounded-lg p-4">
-          <h4 class="font-bold text-neon">${s.name}</h4>
-          <p class="text-sm text-gray-400 mt-1">When: ${s.when}</p>
-          <p class="text-sm text-gray-500 mt-1">${s.benefits}</p>
-        </div>
-      `).join('');
-      
-      const mealData = meals[state.goal][state.dietary];
-      const mealTypes = [
-        { key: 'breakfast', icon: '🌅' },
-        { key: 'lunch', icon: '☀️' },
-        { key: 'dinner', icon: '🌙' },
-        { key: 'snacks', icon: '🍎' }
-      ];
-      
-      document.getElementById('meal-cards').innerHTML = mealTypes.map(m => {
-        const meal = mealData[m.key][Math.floor(Math.random() * mealData[m.key].length)];
-        return `
-          <div class="bg-dark-card rounded-xl p-4 border border-dark-border hover:border-neon/30 transition-all">
-            <div class="flex justify-between items-start mb-2">
-              <div>
-                <p class="text-xs text-gray-400 uppercase">${m.key}</p>
-                <h4 class="font-bold mt-1">${meal.name}</h4>
-              </div>
-              <span class="text-2xl">${m.icon}</span>
-            </div>
-            <div class="flex gap-2 mt-2 text-xs">
-              <span class="px-2 py-1 bg-neon/10 text-neon rounded">P: ${meal.protein}</span>
-              <span class="px-2 py-1 bg-cyan/10 text-cyan rounded">C: ${meal.carbs}</span>
-              <span class="px-2 py-1 bg-red-400/10 text-red-300 rounded">F: ${meal.fats}</span>
-              <span class="px-2 py-1 bg-dark-border text-gray-400 rounded">${meal.cal}cal</span>
-            </div>
-            <button class="w-full mt-3 px-3 py-2 bg-dark-border hover:bg-neon/10 border border-dark-border hover:border-neon text-sm rounded transition-all">
-              🔄 Shuffle Meal
-            </button>
+          <div class="flex gap-3 text-xs mt-1 flex-wrap">
+            <span class="text-neon font-medium">${ex.sets} set${ex.sets > 1 ? 's' : ''}</span>
+            <span class="text-cyan">${ex.reps}</span>
+            <span class="text-gray-400">Rest: ${ex.rest}</span>
+            ${ex.alt ? `<span class="text-gray-500">Alt: ${ex.alt}</span>` : ''}
           </div>
-        `;
-      }).join('');
+          ${!isUtility ? `<textarea placeholder="Add notes (weight used, form tips...)" class="w-full mt-2 p-2 bg-dark-border rounded text-xs text-white resize-none border border-transparent focus:border-neon/50 outline-none" rows="1"></textarea>` : ''}
+        </div>
+        ${!isUtility ? `<button class="mark-btn shrink-0 px-3 py-2 bg-dark-border hover:bg-neon/20 border border-dark-border hover:border-neon rounded-lg text-xs transition-all font-medium" data-id="${id}" data-sets="${ex.sets}" data-done="0">Mark Set</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// Event delegation for mark set buttons
+document.getElementById('workout-content').addEventListener('click', e => {
+  const btn = e.target.closest('.mark-btn');
+  if (!btn) return;
+  const sets = parseInt(btn.dataset.sets);
+  let done = parseInt(btn.dataset.done) + 1;
+  if (done > sets) done = 0;
+  btn.dataset.done = done;
+  if (done === 0) {
+    btn.textContent = 'Mark Set';
+    btn.classList.remove('bg-neon/20','border-neon','text-dark');
+  } else if (done === sets) {
+    btn.textContent = `✅ Done!`;
+    btn.classList.add('bg-neon/20','border-neon');
+  } else {
+    btn.textContent = `✓ ${done}/${sets}`;
+    btn.classList.add('bg-neon/10','border-neon/50');
+  }
+});
+
+// ===================== MEAL DATABASE =====================
+const meals = {
+  muscle: {
+    veg: {
+      breakfast: [
+        { name:'Protein Oats Bowl', cal:650, protein:'25g', carbs:'75g', fats:'15g', ingredients:['Oats','Protein Powder','Banana','Almond Butter','Berries'] },
+        { name:'Veggie Egg Scramble', cal:680, protein:'28g', carbs:'70g', fats:'16g', ingredients:['4 Eggs','Spinach','Whole Grain Toast','Cheese','Tomato'] },
+        { name:'Greek Yogurt Parfait', cal:620, protein:'30g', carbs:'65g', fats:'14g', ingredients:['Greek Yogurt','Granola','Mixed Berries','Honey','Walnuts'] },
+        { name:'Paneer Paratha', cal:700, protein:'24g', carbs:'78g', fats:'18g', ingredients:['Paneer','Whole Wheat Flour','Yogurt','Butter','Pickle'] },
+        { name:'Lentil Pancakes', cal:640, protein:'22g', carbs:'72g', fats:'15g', ingredients:['Lentil Flour','Eggs','Maple Syrup','Nuts','Banana'] },
+      ],
+      lunch: [
+        { name:'Chickpea Curry Rice', cal:720, protein:'22g', carbs:'88g', fats:'16g', ingredients:['Chickpeas','Basmati Rice','Coconut Milk','Veggies','Spices'] },
+        { name:'Paneer Buddha Bowl', cal:710, protein:'28g', carbs:'78g', fats:'18g', ingredients:['Paneer','Quinoa','Roasted Veggies','Tahini','Lemon'] },
+        { name:'Tofu Stir-fry', cal:680, protein:'26g', carbs:'75g', fats:'17g', ingredients:['Tofu','Brown Rice','Mixed Veggies','Sesame Oil','Soy Sauce'] },
+        { name:'Lentil Dal Rice', cal:700, protein:'24g', carbs:'82g', fats:'15g', ingredients:['Red Lentils','Brown Rice','Turmeric','Ghee','Onion'] },
+        { name:'Bean Burrito Bowl', cal:695, protein:'25g', carbs:'80g', fats:'16g', ingredients:['Black Beans','Brown Rice','Salsa','Cheese','Veggies'] },
+      ],
+      dinner: [
+        { name:'Paneer Tikka Masala', cal:680, protein:'26g', carbs:'72g', fats:'17g', ingredients:['Paneer','Sweet Potato','Yogurt','Masala','Cream'] },
+        { name:'Vegetable Biryani', cal:700, protein:'23g', carbs:'82g', fats:'18g', ingredients:['Basmati','Mixed Veggies','Boiled Eggs','Saffron','Spices'] },
+        { name:'Tofu Curry Rice', cal:670, protein:'24g', carbs:'78g', fats:'16g', ingredients:['Tofu','Jasmine Rice','Thai Curry Paste','Coconut Milk','Basil'] },
+        { name:'Lentil Soup & Bread', cal:650, protein:'22g', carbs:'75g', fats:'15g', ingredients:['Lentils','Whole Grain Bread','Veg Broth','Herbs','Olive Oil'] },
+        { name:'Egg Fried Rice', cal:710, protein:'24g', carbs:'80g', fats:'18g', ingredients:['Eggs','Basmati Rice','Mixed Veggies','Soy Sauce','Sesame Oil'] },
+      ],
+      snacks: [
+        { name:'Protein Shake', cal:280, protein:'25g', carbs:'30g', fats:'8g', ingredients:['Whey Protein','Banana','Almond Milk','Honey'] },
+        { name:'Greek Yogurt & Berries', cal:220, protein:'20g', carbs:'25g', fats:'5g', ingredients:['Greek Yogurt','Mixed Berries','Honey','Granola'] },
+        { name:'Cheese & Crackers', cal:240, protein:'12g', carbs:'28g', fats:'10g', ingredients:['Paneer/Cheese','Whole Grain Crackers','Cucumber'] },
+      ]
+    },
+    'non-veg': {
+      breakfast: [
+        { name:'Egg & Avocado Toast', cal:650, protein:'32g', carbs:'65g', fats:'20g', ingredients:['5 Eggs','Whole Wheat Toast','Avocado','Tomato','Spinach'] },
+        { name:'Chicken Oats Bowl', cal:680, protein:'38g', carbs:'72g', fats:'16g', ingredients:['Oats','Chicken Breast','Banana','Almonds','Honey'] },
+        { name:'Salmon Cream Cheese Toast', cal:700, protein:'36g', carbs:'68g', fats:'20g', ingredients:['Salmon','Whole Grain Bread','Cream Cheese','Cucumber','Lemon'] },
+        { name:'Steak & Eggs', cal:750, protein:'42g', carbs:'55g', fats:'22g', ingredients:['Beef Steak','3 Eggs','Sweet Potato','Spinach','Oil'] },
+        { name:'Turkey & Egg Scramble', cal:660, protein:'36g', carbs:'60g', fats:'18g', ingredients:['Ground Turkey','4 Eggs','Whole Grain Toast','Tomato','Cheese'] },
+      ],
+      lunch: [
+        { name:'Grilled Chicken Rice', cal:720, protein:'42g', carbs:'80g', fats:'16g', ingredients:['Chicken Breast','Basmati Rice','Broccoli','Olive Oil','Garlic'] },
+        { name:'Salmon Sweet Potato Bowl', cal:700, protein:'38g', carbs:'75g', fats:'18g', ingredients:['Salmon','Sweet Potato','Asparagus','Lemon','Herbs'] },
+        { name:'Beef & Brown Rice Bowl', cal:740, protein:'44g', carbs:'82g', fats:'18g', ingredients:['Lean Beef','Brown Rice','Mixed Veggies','Soy Sauce','Sesame Oil'] },
+        { name:'Tuna Pasta', cal:680, protein:'36g', carbs:'78g', fats:'16g', ingredients:['Canned Tuna','Whole Wheat Pasta','Olive Oil','Veggies','Lemon'] },
+        { name:'Chicken Fried Rice', cal:710, protein:'40g', carbs:'79g', fats:'17g', ingredients:['Chicken','Fried Rice','Egg','Mixed Veggies','Soy Sauce'] },
+      ],
+      dinner: [
+        { name:'Chicken & Baked Potato', cal:680, protein:'42g', carbs:'72g', fats:'16g', ingredients:['Chicken Breast','Baked Potato','Green Beans','Olive Oil','Herbs'] },
+        { name:'Salmon Risotto', cal:710, protein:'38g', carbs:'80g', fats:'18g', ingredients:['Salmon','Arborio Rice','Peas','Parmesan','White Wine'] },
+        { name:'Beef Stir-fry', cal:700, protein:'42g', carbs:'75g', fats:'17g', ingredients:['Lean Beef','Brown Rice','Mixed Veggies','Sesame Oil','Soy Sauce'] },
+        { name:'Turkey Meatball Pasta', cal:670, protein:'38g', carbs:'73g', fats:'16g', ingredients:['Ground Turkey','Whole Wheat Pasta','Tomato Sauce','Herbs','Parmesan'] },
+        { name:'Lamb Curry Rice', cal:720, protein:'36g', carbs:'80g', fats:'18g', ingredients:['Lamb','Basmati Rice','Curry Sauce','Veggies','Yogurt'] },
+      ],
+      snacks: [
+        { name:'Protein Shake', cal:300, protein:'35g', carbs:'28g', fats:'8g', ingredients:['Whey Protein','Banana','Almond Milk','Peanut Butter'] },
+        { name:'Turkey & Cheese Roll', cal:280, protein:'28g', carbs:'20g', fats:'12g', ingredients:['Turkey Breast','Cheese','Whole Grain Crackers','Mustard'] },
+        { name:'Tuna & Avocado', cal:260, protein:'30g', carbs:'12g', fats:'10g', ingredients:['Canned Tuna','Avocado','Whole Grain Crackers','Lemon'] },
+      ]
     }
-
-    // PAGE NAVIGATION
-    function goToPage(pageId) {
-      document.querySelectorAll('#app > div').forEach(p => p.classList.add('hidden'));
-      document.getElementById(pageId).classList.remove('hidden');
-      window.scrollTo(0, 0);
+  },
+  weight: {
+    veg: {
+      breakfast: [
+        { name:'Light Veggie Scramble', cal:360, protein:'18g', carbs:'40g', fats:'12g', ingredients:['2 Eggs','Spinach','Mushrooms','Whole Grain Toast','Tomato'] },
+        { name:'Oat Bowl', cal:340, protein:'12g', carbs:'45g', fats:'10g', ingredients:['Oats','Berries','Honey','Almonds','Cinnamon'] },
+        { name:'Green Protein Smoothie', cal:320, protein:'20g', carbs:'38g', fats:'8g', ingredients:['Spinach','Banana','Protein Powder','Almond Milk','Flaxseeds'] },
+        { name:'Tofu Veggie Toast', cal:350, protein:'16g', carbs:'38g', fats:'12g', ingredients:['Tofu','Whole Wheat Toast','Tomato','Olive Oil','Herbs'] },
+        { name:'Chickpea Salad', cal:370, protein:'15g', carbs:'44g', fats:'12g', ingredients:['Chickpeas','Mixed Greens','Tahini','Lemon','Cucumber'] },
+      ],
+      lunch: [
+        { name:'Lentil & Veggie Salad', cal:420, protein:'16g', carbs:'52g', fats:'12g', ingredients:['Red Lentils','Mixed Greens','Veggies','Olive Oil','Lemon Dressing'] },
+        { name:'Tofu Stir-fry', cal:400, protein:'18g', carbs:'48g', fats:'11g', ingredients:['Tofu','Brown Rice','Mixed Veggies','Low-Sodium Sauce','Sesame Oil'] },
+        { name:'Chickpea Wrap', cal:410, protein:'15g', carbs:'50g', fats:'13g', ingredients:['Whole Wheat Wrap','Chickpeas','Hummus','Veggies','Feta'] },
+        { name:'Veggie Soup & Rice', cal:380, protein:'14g', carbs:'46g', fats:'11g', ingredients:['Veg Broth','Brown Rice','Mixed Veggies','Herbs','Lemon'] },
+        { name:'Bean Burrito Bowl', cal:420, protein:'16g', carbs:'52g', fats:'12g', ingredients:['Black Beans','Brown Rice','Salsa','Avocado','Lime'] },
+      ],
+      dinner: [
+        { name:'Vegetable Curry', cal:400, protein:'14g', carbs:'48g', fats:'12g', ingredients:['Mixed Veggies','Chickpeas','Light Coconut Milk','Brown Rice','Spices'] },
+        { name:'Lentil Pasta', cal:410, protein:'16g', carbs:'50g', fats:'11g', ingredients:['Whole Wheat Pasta','Lentils','Marinara','Veggies','Herbs'] },
+        { name:'Tofu Buddha Bowl', cal:390, protein:'17g', carbs:'45g', fats:'13g', ingredients:['Tofu','Quinoa','Roasted Veggies','Tahini','Lemon'] },
+        { name:'Veggie Stir-fry', cal:380, protein:'13g', carbs:'44g', fats:'12g', ingredients:['Mixed Veggies','Brown Rice','Sesame Oil','Low-Sodium Sauce','Ginger'] },
+        { name:'Bean Chili', cal:420, protein:'16g', carbs:'52g', fats:'11g', ingredients:['Mixed Beans','Tomatoes','Veggies','Spices','Lime'] },
+      ],
+      snacks: [
+        { name:'Green Tea & Berries', cal:120, protein:'2g', carbs:'28g', fats:'1g', ingredients:['Green Tea','Mixed Berries','Honey'] },
+        { name:'Hummus & Veggies', cal:180, protein:'8g', carbs:'20g', fats:'8g', ingredients:['Hummus','Cucumber','Carrots','Bell Pepper','Celery'] },
+        { name:'Apple & Almond Butter', cal:200, protein:'6g', carbs:'28g', fats:'9g', ingredients:['Apple','Almond Butter','Cinnamon'] },
+      ]
+    },
+    'non-veg': {
+      breakfast: [
+        { name:'Egg White Scramble', cal:360, protein:'28g', carbs:'36g', fats:'10g', ingredients:['5 Egg Whites','Whole Grain Toast','Spinach','Turkey Bacon','Tomato'] },
+        { name:'Chicken Oats', cal:400, protein:'32g', carbs:'44g', fats:'11g', ingredients:['Oats','Chicken Breast','Berries','Almonds','Honey'] },
+        { name:'Salmon Avocado Toast', cal:390, protein:'30g', carbs:'40g', fats:'14g', ingredients:['Salmon','Whole Grain Toast','Avocado','Lemon','Dill'] },
+        { name:'Turkey Veggie Scramble', cal:370, protein:'34g', carbs:'36g', fats:'12g', ingredients:['Ground Turkey','Sweet Potato','Spinach','Eggs','Oil'] },
+        { name:'Egg & Turkey Breakfast', cal:380, protein:'28g', carbs:'38g', fats:'12g', ingredients:['3 Eggs','Turkey Bacon','Whole Grain Toast','Tomato','Avocado'] },
+      ],
+      lunch: [
+        { name:'Grilled Chicken Salad', cal:400, protein:'38g', carbs:'32g', fats:'12g', ingredients:['Chicken Breast','Mixed Greens','Veggies','Olive Oil Dressing','Lemon'] },
+        { name:'Tuna Brown Rice Bowl', cal:390, protein:'36g', carbs:'42g', fats:'10g', ingredients:['Canned Tuna','Brown Rice','Veggies','Low-Fat Mayo','Lemon'] },
+        { name:'Lean Beef Bowl', cal:410, protein:'40g', carbs:'40g', fats:'12g', ingredients:['Lean Beef Mince','Brown Rice','Broccoli','Soy Sauce','Garlic'] },
+        { name:'Turkey Wrap', cal:390, protein:'35g', carbs:'42g', fats:'10g', ingredients:['Turkey Breast','Whole Wheat Wrap','Hummus','Veggies','Mustard'] },
+        { name:'Salmon Quinoa Bowl', cal:420, protein:'38g', carbs:'45g', fats:'12g', ingredients:['Salmon','Quinoa','Veggies','Lemon','Herbs'] },
+      ],
+      dinner: [
+        { name:'Grilled Chicken & Veggies', cal:390, protein:'40g', carbs:'38g', fats:'11g', ingredients:['Chicken Breast','Roasted Veggies','Brown Rice','Olive Oil','Herbs'] },
+        { name:'White Fish & Sweet Potato', cal:380, protein:'36g', carbs:'42g', fats:'10g', ingredients:['White Fish','Sweet Potato','Green Beans','Lemon','Herbs'] },
+        { name:'Lean Turkey Pasta', cal:400, protein:'38g', carbs:'44g', fats:'11g', ingredients:['Ground Turkey','Whole Wheat Pasta','Tomato Sauce','Herbs','Parmesan'] },
+        { name:'Salmon & Roasted Veggies', cal:390, protein:'36g', carbs:'40g', fats:'13g', ingredients:['Salmon','Roasted Veggies','Olive Oil','Lemon','Garlic'] },
+        { name:'Chicken Stir-fry', cal:400, protein:'38g', carbs:'44g', fats:'11g', ingredients:['Chicken','Brown Rice','Mixed Veggies','Low-Sodium Sauce','Ginger'] },
+      ],
+      snacks: [
+        { name:'Protein Shake', cal:200, protein:'25g', carbs:'18g', fats:'5g', ingredients:['Whey Protein','Banana','Almond Milk'] },
+        { name:'Turkey Rice Cakes', cal:180, protein:'22g', carbs:'15g', fats:'5g', ingredients:['Turkey Breast','Rice Cakes','Mustard','Cucumber'] },
+        { name:'Tuna Snack', cal:160, protein:'26g', carbs:'8g', fats:'4g', ingredients:['Canned Tuna','Low-Fat Mayo','Cucumber','Lemon'] },
+      ]
     }
+  }
+};
 
-    // EVENTS
-    document.getElementById('generate-btn').addEventListener('click', () => {
-      if (!document.getElementById('generate-btn').disabled) {
-        renderWorkout();
-        goToPage('page-workout');
-        updateStreak();
-      }
+const supplements = {
+  muscle: [
+    { name:'Whey Protein', when:'Post-workout (30 min after)', benefits:'Muscle recovery & growth' },
+    { name:'Creatine Monohydrate', when:'Daily 5g (any time)', benefits:'Strength, power & muscle volume' },
+    { name:'Multivitamin', when:'With breakfast', benefits:'Fill micronutrient gaps' },
+    { name:'Omega-3 Fish Oil', when:'With any meal (2-3g)', benefits:'Joint health & inflammation reduction' },
+  ],
+  weight: [
+    { name:'Whey Protein', when:'Post-workout (30 min after)', benefits:'Preserve muscle while losing fat' },
+    { name:'CLA', when:'With meals (3-6g total)', benefits:'Enhanced fat oxidation' },
+    { name:'Green Tea Extract', when:'Morning on empty stomach', benefits:'Boosts metabolism & fat burning' },
+    { name:'Multivitamin', when:'With breakfast', benefits:'Support during calorie deficit' },
+  ]
+};
+
+// ===================== BMR CALC =====================
+function calculateCalories() {
+  const kg = state.weightUnit === 'lbs' ? state.weight * 0.453592 : state.weight;
+  const h = state.height;
+  const ageMap = { '15-18':16, '19-25':22, '26-35':30, '36-50':43, '50+':55 };
+  const age = ageMap[state.age] || 25;
+
+  let bmr;
+  if (state.gender === 'male') {
+    bmr = 88.362 + (13.397 * kg) + (4.799 * h) - (5.677 * age);
+  } else if (state.gender === 'female') {
+    bmr = 447.593 + (9.247 * kg) + (3.098 * h) - (4.330 * age);
+  } else {
+    bmr = 500 + (11 * kg) + (4 * h) - (5 * age);
+  }
+
+  const actMap = { '2':1.2, '3':1.375, '4':1.55, '5':1.725, '6':1.9 };
+  const tdee = bmr * (actMap[state.days] || 1.55);
+  return state.goal === 'muscle' ? Math.round(tdee * 1.1) : Math.round(tdee * 0.85);
+}
+
+function calculateWater() {
+  const kg = state.weightUnit === 'lbs' ? state.weight * 0.453592 : state.weight;
+  return (kg * 0.035).toFixed(1) + 'L';
+}
+
+// ===================== RENDER DIET =====================
+function renderDiet() {
+  const cal = calculateCalories();
+  const macros = state.goal === 'muscle' ? { p:30, c:45, f:25 } : { p:35, c:35, f:30 };
+
+  document.getElementById('calorie-target').textContent = cal.toLocaleString();
+  document.getElementById('calorie-desc').textContent = state.goal === 'muscle' ? 'Slight caloric surplus for muscle growth' : 'Caloric deficit for fat loss';
+
+  const pg = Math.round((cal * macros.p / 100) / 4);
+  const cg = Math.round((cal * macros.c / 100) / 4);
+  const fg = Math.round((cal * macros.f / 100) / 9);
+
+  document.getElementById('protein-grams').textContent = pg + 'g';
+  document.getElementById('carbs-grams').textContent = cg + 'g';
+  document.getElementById('fats-grams').textContent = fg + 'g';
+  document.getElementById('protein-pct').textContent = macros.p + '%';
+  document.getElementById('carbs-pct').textContent = macros.c + '%';
+  document.getElementById('fats-pct').textContent = macros.f + '%';
+  document.getElementById('protein-bar').style.width = macros.p + '%';
+  document.getElementById('carbs-bar').style.width = macros.c + '%';
+  document.getElementById('fats-bar').style.width = macros.f + '%';
+
+  const pie = document.getElementById('macro-pie');
+  pie.style.setProperty('--protein', macros.p);
+  pie.style.setProperty('--carbs', macros.c);
+  pie.style.setProperty('--fats', macros.f);
+
+  document.getElementById('water-amount').textContent = calculateWater();
+
+  // Meal timing based on schedule
+  const timings = {
+    morning: [['Breakfast','6:00 AM'],['Mid-Morning Snack','9:30 AM'],['Lunch','12:30 PM'],['Pre-Workout','4:00 PM'],['Dinner','7:00 PM']],
+    afternoon: [['Breakfast','8:00 AM'],['Pre-Workout','12:00 PM'],['Post-Workout Meal','2:00 PM'],['Snack','5:00 PM'],['Dinner','8:00 PM']],
+    evening: [['Breakfast','8:00 AM'],['Lunch','1:00 PM'],['Pre-Workout','5:00 PM'],['Post-Workout Meal','7:30 PM'],['Light Snack','9:00 PM']],
+    flexible: [['Breakfast','8:00 AM'],['Mid-Morning Snack','11:00 AM'],['Lunch','1:00 PM'],['Afternoon Snack','4:00 PM'],['Dinner','7:30 PM']],
+  };
+  const times = timings[state.schedule] || timings.flexible;
+  document.getElementById('meal-timing').innerHTML = times.map(([meal,time]) =>
+    `<div class="flex justify-between"><span class="text-gray-400">${meal}</span><span class="text-neon font-bold">${time}</span></div>`
+  ).join('');
+
+  // Supplements
+  document.getElementById('supplements-container').innerHTML = supplements[state.goal].map(s =>
+    `<div class="bg-dark/50 rounded-lg p-4 border border-dark-border">
+      <h4 class="font-bold text-neon">${s.name}</h4>
+      <p class="text-sm text-gray-400 mt-1">⏰ ${s.when}</p>
+      <p class="text-sm text-gray-500 mt-1">✅ ${s.benefits}</p>
+    </div>`
+  ).join('');
+
+  // Store meal data and render meals
+  state.mealData = meals[state.goal][state.dietary];
+  renderMealCards();
+
+  // 7-day plan
+  render7DayPlan();
+}
+
+function renderMealCards() {
+  const mealTypes = [
+    { key:'breakfast', icon:'🌅', label:'Breakfast' },
+    { key:'lunch', icon:'☀️', label:'Lunch' },
+    { key:'dinner', icon:'🌙', label:'Dinner' },
+    { key:'snacks', icon:'🍎', label:'Snacks' },
+  ];
+  document.getElementById('meal-cards').innerHTML = mealTypes.map(m => {
+    const options = state.mealData[m.key];
+    const meal = options[Math.floor(Math.random() * options.length)];
+    return mealCard(m, meal, options);
+  }).join('');
+
+  // Shuffle buttons
+  document.querySelectorAll('.shuffle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.key;
+      const options = state.mealData[key];
+      const meal = options[Math.floor(Math.random() * options.length)];
+      const mealType = mealTypes.find(m => m.key === key);
+      btn.closest('.meal-card-wrapper').outerHTML = mealCard(mealType, meal, options);
+      // Re-attach listener for new button
+      document.querySelectorAll('.shuffle-btn').forEach(b => {
+        b.addEventListener('click', shuffleMeal);
+      });
     });
+  });
+}
 
-    document.getElementById('back-to-form').addEventListener('click', () => goToPage('page-onboarding'));
-    document.getElementById('back-to-workout').addEventListener('click', () => goToPage('page-workout'));
+function shuffleMeal(e) {
+  const btn = e.currentTarget;
+  const key = btn.dataset.key;
+  const options = state.mealData[key];
+  const meal = options[Math.floor(Math.random() * options.length)];
+  const mealTypes = [
+    { key:'breakfast', icon:'🌅', label:'Breakfast' },
+    { key:'lunch', icon:'☀️', label:'Lunch' },
+    { key:'dinner', icon:'🌙', label:'Dinner' },
+    { key:'snacks', icon:'🍎', label:'Snacks' },
+  ];
+  const mealType = mealTypes.find(m => m.key === key);
+  const wrapper = btn.closest('.meal-card-wrapper');
+  wrapper.outerHTML = mealCard(mealType, meal, options);
+  document.querySelectorAll('.shuffle-btn').forEach(b => b.addEventListener('click', shuffleMeal));
+}
 
-    document.getElementById('get-diet-btn').addEventListener('click', () => {
-      renderDiet();
-      goToPage('page-diet');
-    });
+function mealCard(mealType, meal, options) {
+  return `
+    <div class="meal-card-wrapper bg-dark-card rounded-xl p-5 border border-dark-border hover:border-neon/30 transition-all">
+      <div class="flex justify-between items-start mb-3">
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wide">${mealType.label}</p>
+          <h4 class="font-bold mt-1 text-base">${meal.name}</h4>
+        </div>
+        <span class="text-2xl">${mealType.icon}</span>
+      </div>
+      <div class="flex gap-2 flex-wrap mb-3">
+        <span class="px-2 py-1 bg-neon/10 text-neon rounded text-xs font-medium">P: ${meal.protein}</span>
+        <span class="px-2 py-1 bg-cyan/10 text-cyan rounded text-xs font-medium">C: ${meal.carbs}</span>
+        <span class="px-2 py-1 bg-red-400/10 text-red-300 rounded text-xs font-medium">F: ${meal.fats}</span>
+        <span class="px-2 py-1 bg-dark-border text-gray-400 rounded text-xs">${meal.cal} kcal</span>
+      </div>
+      <div class="flex flex-wrap gap-1 mb-3">
+        ${meal.ingredients.map(i => `<span class="px-2 py-1 bg-dark/50 rounded-full text-xs text-gray-300">${i}</span>`).join('')}
+      </div>
+      <button class="shuffle-btn w-full px-3 py-2 bg-dark-border hover:bg-neon/10 border border-dark-border hover:border-neon text-sm rounded-lg transition-all font-medium" data-key="${mealType.key}">🔄 Shuffle Meal</button>
+    </div>
+  `;
+}
 
-    document.getElementById('restart-btn').addEventListener('click', () => {
-      state.gender = null;
-      state.age = null;
-      state.goal = null;
-      state.equipment = null;
-      state.level = null;
-      state.days = null;
-      state.time = null;
-      state.schedule = null;
-      state.sleep = null;
-      state.health = [];
-      state.dietary = null;
-      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('option-selected'));
-      updateProgress();
-      goToPage('page-onboarding');
-    });
+function render7DayPlan() {
+  const mealTypes = [
+    { key:'breakfast', icon:'🌅', label:'Breakfast' },
+    { key:'lunch', icon:'☀️', label:'Lunch' },
+    { key:'dinner', icon:'🌙', label:'Dinner' },
+    { key:'snacks', icon:'🍎', label:'Snacks' },
+  ];
+  const days7 = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const container = document.getElementById('7day-meals');
+  container.innerHTML = days7.map(day => {
+    const dayMeals = mealTypes.map(m => {
+      const options = state.mealData[m.key];
+      const meal = options[Math.floor(Math.random() * options.length)];
+      return `<div class="flex items-center gap-2 text-sm"><span>${m.icon}</span><span class="text-gray-300">${meal.name}</span><span class="text-gray-500 text-xs ml-auto">${meal.cal}cal</span></div>`;
+    }).join('');
+    return `
+      <div class="bg-dark-card rounded-xl p-4 border border-dark-border">
+        <h4 class="font-bold text-neon mb-3">${day}</h4>
+        <div class="space-y-2">${dayMeals}</div>
+      </div>
+    `;
+  }).join('');
+}
 
-    document.getElementById('7day-toggle').addEventListener('click', () => {
-      document.getElementById('7day-section').classList.toggle('hidden');
-      document.getElementById('single-day-section').classList.toggle('hidden');
-    });
+// ===================== QUOTES =====================
+const quotes = [
+  "The only bad workout is the one that didn't happen.",
+  "Pain is temporary, glory is forever.",
+  "Discipline is doing it even when you don't want to.",
+  "Your body can handle almost anything. Train your mind.",
+  "The more you sweat, the less you bleed in battle.",
+  "Don't watch the clock. Keep going."
+];
+const dietQuotes = [
+  "You can't out-train a bad diet.",
+  "Abs are made in the kitchen.",
+  "Eat like you love yourself.",
+  "Take care of your body. It's the only one you have.",
+  "Nutrition is the foundation of fitness.",
+  "What you eat in private shows in public."
+];
 
-    document.getElementById('print-plan-btn').addEventListener('click', () => {
-      window.print();
-    });
+// ===================== NAVIGATION =====================
+function goToPage(id) {
+  document.querySelectorAll('#app > div').forEach(p => p.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0,0);
+}
 
-    document.getElementById('share-diet-btn').addEventListener('click', () => {
-      alert('Plan shared! (Copy feature available)');
-    });
+// Streak (localStorage)
+function getStreak() {
+  try {
+    const streak = localStorage.getItem('fitforge_streak') || '0';
+    return parseInt(streak);
+  } catch(e) { return 0; }
+}
+function updateStreakDisplay() {
+  document.getElementById('streak-count').textContent = getStreak();
+}
 
-    // Set daily quotes
-    const todayQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    const todayDietQuote = dietQuotes[Math.floor(Math.random() * dietQuotes.length)];
-    setTimeout(() => {
-      if (document.getElementById('daily-quote')) document.getElementById('daily-quote').textContent = `"${todayQuote}"`;
-      if (document.getElementById('diet-quote')) document.getElementById('diet-quote').textContent = `"${todayDietQuote}"`;
-    }, 500);
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d10cb8aa3cbb2cb',t:'MTc3MTYxOTc3NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+// ===================== EVENTS =====================
+document.getElementById('generate-btn').addEventListener('click', () => {
+  if (!document.getElementById('generate-btn').disabled) {
+    renderWorkout();
+    goToPage('page-workout');
+    document.getElementById('daily-quote').textContent = `"${quotes[Math.floor(Math.random()*quotes.length)]}"`;
+    updateStreakDisplay();
+  }
+});
+
+document.getElementById('back-to-form').addEventListener('click', () => goToPage('page-onboarding'));
+document.getElementById('back-to-workout').addEventListener('click', () => goToPage('page-workout'));
+
+document.getElementById('get-diet-btn').addEventListener('click', () => {
+  renderDiet();
+  goToPage('page-diet');
+  document.getElementById('diet-quote').textContent = `"${dietQuotes[Math.floor(Math.random()*dietQuotes.length)]}"`;
+  // Re-attach shuffle listeners after diet renders
+  setTimeout(() => {
+    document.querySelectorAll('.shuffle-btn').forEach(b => b.addEventListener('click', shuffleMeal));
+  }, 100);
+});
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  Object.keys(state).forEach(k => {
+    if (Array.isArray(state[k])) state[k] = [];
+    else if (typeof state[k] === 'string' && !['currentTheme','weightUnit'].includes(k)) state[k] = null;
+    else if (typeof state[k] === 'number') state[k] = null;
+    else if (k === 'currentPlan' || k === 'mealData') state[k] = typeof state[k] === 'object' ? [] : {};
+  });
+  state.gender = null; state.weight = null; state.height = null;
+  state.age = null; state.goal = null; state.equipment = null;
+  state.level = null; state.days = null; state.time = null;
+  state.schedule = null; state.sleep = null; state.health = null;
+  state.dietary = null;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('option-selected'));
+  document.querySelectorAll('.health-check').forEach(c => c.checked = false);
+  document.getElementById('confirm-weight-btn').textContent = '✓ Confirm Weight';
+  document.getElementById('confirm-weight-btn').classList.remove('bg-neon/30','border-neon');
+  document.getElementById('confirm-height-btn').textContent = '✓ Confirm Height';
+  document.getElementById('confirm-height-btn').classList.remove('bg-neon/30','border-neon');
+  updateProgress();
+  goToPage('page-onboarding');
+});
+
+document.getElementById('7day-toggle').addEventListener('click', () => {
+  document.getElementById('7day-section').classList.toggle('hidden');
+  document.getElementById('single-day-section').classList.toggle('hidden');
+});
+
+document.getElementById('print-plan-btn').addEventListener('click', () => window.print());
+
+document.getElementById('share-diet-btn').addEventListener('click', () => {
+  const text = `My FitForge Plan:\nGoal: ${state.goal === 'muscle' ? 'Gain Muscle' : 'Lose Weight'}\nCalories: ${calculateCalories()} kcal/day\nCheck out fitforge-xi.vercel.app`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => alert('Plan copied to clipboard! Share it anywhere 🔥'));
+  } else { alert(text); }
+});
+
+</script>
+</body>
 </html>
